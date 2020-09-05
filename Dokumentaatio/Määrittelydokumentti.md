@@ -1,5 +1,5 @@
 ## Määrittelydokumentti
 
-####Aihe ja käytetyt tietorakenteet
+#### Aihe ja käytetyt tietorakenteet
 
-####Aika- ja tilavaativuudet
+#### Aika- ja tilavaativuudet
