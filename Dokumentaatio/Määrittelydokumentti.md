@@ -15,12 +15,12 @@ A* algoritmin aikavaativuus on samaa luokkaa kuin Dijkstran, O((|E|+|V|)log|V|A)
 |V| on verkon solmujen määrä ja |E| verkon kaarien määrä. (Fringe Searchin pitäisi
 olla nopeampi, mutta en ole vielä tarkemmin tutustunut ko. algoritmiin.)
 
-#### Muuta
+## Muuta
 Työ totetutetaan Javalla ja dokumentointikielenä on suomi. Tekijä kuuluu 
 tietojenkäsittelytieteen kandiohjelmaan.
 
 
-#### Käytetyt lähteet
+## Käytetyt lähteet
 Luentomoniste Tietorakenteet ja algoritmit, 22.8.2019, Antti Laaksonen.
 Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford 
 Stein: Introduction to Algorithms. Third Edition.
