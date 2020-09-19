@@ -6,6 +6,7 @@
 package tiralabra.reitinhaku.verkko;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.PriorityQueue;
 
 /**
@@ -23,6 +24,7 @@ public class Reitinhaku {
     //ArrayList<Kaari>[][] verkko;
     ArrayList<Solmu> lyhinReitti;
     int[][] suunnat;
+    double reitinPituus;
     
     public void alustaKartta(int leveys, int korkeus) {
         this.leveys = leveys;
@@ -61,6 +63,7 @@ public class Reitinhaku {
     public void suoritaHaku(int ax, int ay, int bx, int by, int hakutapa) {
         etaisyydet[ay][ax] = 0;
         jono.add(new Solmu(ax, ay, 0));
+        //System.out.println(jono.poll()); //ok
         
         while(!jono.isEmpty()) {
             Solmu nykyinen = jono.poll();
@@ -68,6 +71,7 @@ public class Reitinhaku {
             int ny = nykyinen.getY();
             if(kasitelty[ny][nx]) continue;
             kasitelty[ny][nx] = true;
+            //System.out.println("kasitelty[" + ny + "][" + nx + "]" + kasitelty[ny][nx]);
             
             if (nx == bx && ny == by) break;
             //käy läpi 8 suuntaa
@@ -78,21 +82,36 @@ public class Reitinhaku {
                 if(uy < korkeus && uy >= 0 && ux < leveys && ux >= 0 && kartta[uy][ux] != 1) {
                     double nykyinenEtaisyys = etaisyydet[uy][ux];
                     double lisaaEtaisyytta = 1;
-                    if(uy != 0 && ux != 0) {    //jos liikutaan viistosti (etäisyys on sqrt(2))
+                    if (!(suunnat[i][0] == 0 || suunnat[i][1] == 0)) {
+                    //if(!(uy == 0 || ux == 0)) {    //jos liikutaan viistosti (etäisyys on sqrt(2)) TÄMÄ VÄÄRIN!!!
                         lisaaEtaisyytta = Math.sqrt(2);
                     } 
                     double uusiEtaisyys = etaisyydet[ny][nx] + lisaaEtaisyytta;
                     //Jos haku A* algorimilla, lisättävä vielä h(x) (arvio etaisyydestä)
                     if(uusiEtaisyys < nykyinenEtaisyys) {
                         etaisyydet[uy][ux] = uusiEtaisyys;
-                        jono.add(new Solmu(uy, ux, uusiEtaisyys));
+                        jono.add(new Solmu(ux, uy, uusiEtaisyys));
                         mista[uy][ux] = nykyinen;
                     }
                 } 
             }
         }
-//        Solmu maaliSolmu = 
-//        while ()
+        System.out.println("mista[by]{bx] " + mista[by][bx]);
+        System.out.println(ax + ", " + ay + " ja " + bx + ", " + by);
+        while (!(bx == ax && by == ay)) {
+            Solmu v = mista[by][bx];
+            lyhinReitti.add(v);
+            System.out.println(v);
+            by = v.getY();
+            bx = v.getX();
+            reitinPituus += v.getEtaisyys();
+        }
+        Collections.sort(lyhinReitti);
+        //System.out.println(lyhinReitti);
+//        System.out.println("lyhin reitti alkaa: ");
+//        for(int i=0; i<50; i++) {
+//            System.out.println(lyhinReitti.get(i) + ", ");
+//        }
     }
     
     

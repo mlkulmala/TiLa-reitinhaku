@@ -42,4 +42,9 @@ public class Solmu implements Comparable<Solmu> {
             return 0;
         }
     }
+    
+    @Override
+    public String toString() {
+        return "(" + this.x + ", " + this.y + ")";
+    }
 }

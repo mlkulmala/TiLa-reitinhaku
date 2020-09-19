@@ -52,7 +52,7 @@ public class UI extends Application {
 //        GraphicsContext piirtoalusta = canvas.getGraphicsContext2D();
 
         //kuvan lukeminen
-        Image lontoo = new Image("file:Lontoo_rajattu.JPG");
+        Image lontoo = new Image("file:Lontoo_rajattu_2.png");
         
         PixelReader pikselinLukija = lontoo.getPixelReader();
         
@@ -63,8 +63,8 @@ public class UI extends Application {
         int leveys = (int) lontoo.getWidth();
         int korkeus = (int) lontoo.getHeight();
         
-//        WritableImage reititKuvassa = new WritableImage(leveys, korkeus);
-//        PixelWriter pikselinKirjoittaja = reititKuvassa.getPixelWriter();
+        WritableImage reititKuvassa = new WritableImage(leveys, korkeus);
+        PixelWriter pikselinKirjoittaja = reititKuvassa.getPixelWriter();
         
         //pohjusta taulukko [rivit][sarakkeet]
         reitinhaku.alustaKartta(leveys, korkeus);
@@ -81,7 +81,8 @@ public class UI extends Application {
                 }
             }
         }
-        
+//        reitinhaku.alustaHaku();
+//        reitinhaku.suoritaHaku(0, 770, 600, 390, 1);
         
         //gridin asettelu
         GridPane grid = new GridPane();
@@ -90,7 +91,6 @@ public class UI extends Application {
         grid.setVgap(20);
         grid.setHgap(20);
         grid.setPadding(new Insets(20, 20, 20, 20));
-        //grid.add(tubekartta, 0, 0);
         grid.add(kartta, 0, 0);
         GridPane.setColumnSpan(kartta, 11);
         //piirraTausta(canvas.getGraphicsContext2D());
@@ -126,24 +126,17 @@ public class UI extends Application {
 //        int bY = Integer.valueOf(maaliYKentta.getText());
         
         Button hakuNappi = new Button("Hae");
-        //hakuNappi.setOnAction((event) ->) {
-            //reitinhaku.suoritaHaku(aX, aY, bX, bY, hakutapa)
-        //}
-//        startButton.setOnAction(action -> {
-//            if (cbDistricts.getValue() != null) {
-//                String district = (String) cbDistricts.getValue();
-//                try {
-//                    ui.initializeLists(district);
-//                    ui.showFirstQuestion();
-//                } catch (NullPointerException  e) {
-//                    lbMessage.setText("Valitsemassasi vaalipiirissä ei ole vielä ehdokkaita.");
-//                } catch (Exception e) {
-//                    lbMessage.setText("Yhteys tietokantaan epäonnistui.");
-//                }
-//            } else {
-//                lbMessage.setText("Vaalipiiriä ei ole valittu.\n");
-//            }
-//        });
+        hakuNappi.setOnAction((event) -> {
+            reitinhaku.alustaHaku();
+            reitinhaku.suoritaHaku(0, 770, 600, 390, 1);
+        });
+        /*
+        answerButton.setOnAction((event) -> {
+            this.question.setUserAnswer(number);
+            listAnswers(number, lbResults);
+        });
+        */
+
         grid.add(lahtoTeksti, 1, 1);
         GridPane.setColumnSpan(lahtoTeksti, 4);
         grid.add(maaliTeksti, 5, 1);
