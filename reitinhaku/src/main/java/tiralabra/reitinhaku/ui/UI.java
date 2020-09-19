@@ -20,6 +20,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.io.InputStream;
+import java.util.ArrayList;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -29,8 +30,10 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 import tiralabra.reitinhaku.verkko.Reitinhaku;
+import tiralabra.reitinhaku.verkko.Solmu;
 
 /**
  *
@@ -40,6 +43,8 @@ public class UI extends Application {
     
     private Stage stage;
     private Reitinhaku reitinhaku;
+    private PixelWriter kirjoittaja;
+    private WritableImage reititKuvassa;
     
     
     @Override
@@ -63,26 +68,22 @@ public class UI extends Application {
         int leveys = (int) lontoo.getWidth();
         int korkeus = (int) lontoo.getHeight();
         
-        WritableImage reititKuvassa = new WritableImage(leveys, korkeus);
-        PixelWriter pikselinKirjoittaja = reititKuvassa.getPixelWriter();
+        //Miten piirretään reitti karttaan???
+        reititKuvassa = new WritableImage(leveys, korkeus);
+        kirjoittaja = reititKuvassa.getPixelWriter();
         
         //pohjusta taulukko [rivit][sarakkeet]
         reitinhaku.alustaKartta(leveys, korkeus);
-        //int[][] karttaTaulukko = new int[korkeus][leveys];
         for (int y = 0; y < korkeus; y++) {
             for (int x = 0; x < leveys; x++) {
                 Color vari = pikselinLukija.getColor(x, y);
                 if(vari.equals(Color.BLACK)) {
                     reitinhaku.lisaaKarttaan(x, y, 1);
-                    //karttaTaulukko[y][x] = 1;
                 } else {
                     reitinhaku.lisaaKarttaan(x, y, 0);
-                    //karttaTaulukko[y][x] = 0;
                 }
             }
         }
-//        reitinhaku.alustaHaku();
-//        reitinhaku.suoritaHaku(0, 770, 600, 390, 1);
         
         //gridin asettelu
         GridPane grid = new GridPane();
@@ -96,6 +97,7 @@ public class UI extends Application {
         //piirraTausta(canvas.getGraphicsContext2D());
         //piirtoalusta.drawImage(lontoo, 0, 0);
         
+        //Tekstikentät ja napit
         Label lahtoTeksti = new Label("Anna lähtöpaikan koordinaatit:");
         Label lahtoX = new Label("X");
         TextField lahtoXKentta = new TextField();
@@ -108,7 +110,6 @@ public class UI extends Application {
         Label maaliY = new Label("Y");
         TextField maaliYKentta = new TextField();
         
-        //HBox valintaRyhma = new HBox();
         ToggleGroup valintaNapit = new ToggleGroup();
         RadioButton rb_AStar = new RadioButton();
         RadioButton rb_Fringe = new RadioButton();
@@ -116,8 +117,6 @@ public class UI extends Application {
         rb_AStar.setText("A*");
         rb_Fringe.setToggleGroup(valintaNapit);
         rb_Fringe.setText("Fringe");
-        //valintaRyhma.getChildren().add(rb_AStar);
-        //valintaRyhma.getChildren().add(rb_Fringe);
         
         //voiko koordinaatit laittaa valikkoon??? tämä kömpelöä
 //        int aX = Integer.valueOf(lahtoXKentta.getText());
@@ -129,14 +128,11 @@ public class UI extends Application {
         hakuNappi.setOnAction((event) -> {
             reitinhaku.alustaHaku();
             reitinhaku.suoritaHaku(0, 770, 600, 390, 1);
+            piirraReitti(reitinhaku.getLyhinReitti());
+            System.out.println("lyhin reitti alkaa: " + reitinhaku.getLyhinReitti().get(0));
         });
-        /*
-        answerButton.setOnAction((event) -> {
-            this.question.setUserAnswer(number);
-            listAnswers(number, lbResults);
-        });
-        */
-
+        
+        //elementtien asettelu gridiin
         grid.add(lahtoTeksti, 1, 1);
         GridPane.setColumnSpan(lahtoTeksti, 4);
         grid.add(maaliTeksti, 5, 1);
@@ -168,7 +164,15 @@ public class UI extends Application {
                
     }
     
-    
+    //Miten toteutetaan reitin piirtäminen??
+    public void piirraReitti(ArrayList<Solmu> reitti) {
+        for (Solmu s : reitti) {
+            int x = s.getX();
+            int y = s.getY();
+            //kirjoittaja.setColor(x, y, Color.RED);
+            //Circle c = new Circle(x, y, 10, Color.RED);
+        }
+    }
     
     public static void main(String[] args) {
         launch(args);
