@@ -6,21 +6,25 @@ päädyin lopulta vaihtamaan kartan sellaiseen, joka voidaan lukea java PixelRea
 käyttäen ja saada näin helposti pikselien koordinaatteja vastaavaksi taulukoksi. 
 Työ on vielä pahasti kesken, mutta luulen, että olen menossa oikeaan suuntaan.
 
-Olen luonut luokat kaarelle ja solmulle sekä aloittanut reitinhakualgoritmia Dijkstran algoritmin pohjalta.
-Olen myös tutustunut tarkemmin siihen, miten A*-algoritmissa parannetaan etäisyyden arviointia. Fringe Search on vielä tarkemmin tutkimatta.
+Olen luonut luokat kaarelle ja solmulle sekä aloittanut reitinhakualgoritmia Dijkstran 
+algoritmin pohjalta. Olen myös tutustunut tarkemmin siihen, miten A*-algoritmissa parannetaan 
+etäisyyden arviointia. Fringe Search on vielä tarkemmin tutkimatta.
 
 Muokkasin myös käyttöliittymää uutta karttaa vastaavaksi. Vain Hae-napilla on tällä 
 hetkellä toiminto, ja se hakee (testausmielessä) ohjelman sisällä määriteltyjen 
-koordinaattien välisen reitin.
+koordinaattien välisen reitin. Toistaiseksi olen vain tulostanut haetun reitin.
+
+Checkstyle on myös otettu käyttöön.
 
 ## Mikä on jäänyt epäselväksi tai tuottanut vaikeuksia
-En vielä keksinyt, miten koordinaatit kirjoitetaan hakukenttään tai haetaan valikosta. Mahdollisia vaihtoehtoja 
-on liian paljon, jotta niistä voisi tehdä valikon. 
+En vielä keksinyt, miten koordinaatit kirjoitetaan hakukenttään tai haetaan valikosta. 
+Mahdollisia vaihtoehtoja on liian paljon, jotta niistä voisi tehdä valikon. En ole 
+edelleenkään saanut selvitettyä, miten reitti piirretään karttaan.
 
 ## Mitä seuraavaksi
 Seuraavaksi pitäisi saada aikaan haetun reitin piirtäminen karttaan, jotta näen 
-onko tulos toivotunlainen. Javadocin jätän vasta loppupuolelle, koska koodissa on 
+onko tulos toivotunlainen. Javadocin jätän vasta loppusuoralle, koska koodissa on 
 vielä paljon siivottavaa ja erillisiin metodeihin pilkkomista.
 
 Viikon työtunnit:
-10
+11
