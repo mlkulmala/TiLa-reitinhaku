@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
@@ -45,6 +46,7 @@ public class UI extends Application {
     private Reitinhaku reitinhaku;
     private PixelWriter kirjoittaja;
     private WritableImage reititKuvassa;
+    private int leveys, korkeus;
     
     
     @Override
@@ -53,31 +55,36 @@ public class UI extends Application {
         this.stage = stage;
         reitinhaku = new Reitinhaku();
         
-//        Canvas canvas = new Canvas(850, 550);
-//        GraphicsContext piirtoalusta = canvas.getGraphicsContext2D();
+        
 
         //kuvan lukeminen
-        Image lontoo = new Image("file:Lontoo_rajattu_2.png");
+        //Image lontoo = new Image("file:Lontoo_700px.JPG", 700, 471, true, false);
+        //Image lontoo = new Image("file:Milano_rajattu.png, 700, 389, true, false");
+        //Image lontoo = new Image("file:Lontoo_700px.JPG");
+        Image karttaKuva = new Image("file:Milano_bitmap.bmp", 768, 427, true, false);
+        leveys = (int) karttaKuva.getWidth();
+        korkeus = (int) karttaKuva.getHeight();
         
-        PixelReader pikselinLukija = lontoo.getPixelReader();
+        PixelReader pikselinLukija = karttaKuva.getPixelReader();
         
-        ImageView kartta = new ImageView(lontoo);
-        kartta.setFitWidth(700);
-        kartta.setPreserveRatio(true);
+        //ImageView kartta = new ImageView(lontoo);
+//        kartta.setFitWidth(700);
+//        kartta.setPreserveRatio(true);
+
+        //luodaan canvas ja tuodaan siihen kuva
+        Canvas canvas = new Canvas(800, 430);
+        GraphicsContext piirtoalusta = canvas.getGraphicsContext2D();
+        piirtoalusta.drawImage(karttaKuva, 0, 0);
         
-        int leveys = (int) lontoo.getWidth();
-        int korkeus = (int) lontoo.getHeight();
-        
-        //Miten piirretään reitti karttaan???
-        reititKuvassa = new WritableImage(leveys, korkeus);
-        kirjoittaja = reititKuvassa.getPixelWriter();
+       
         
         //pohjusta taulukko [rivit][sarakkeet]
         reitinhaku.alustaKartta(leveys, korkeus);
+        //kuvan pikselien lukeminen
         for (int y = 0; y < korkeus; y++) {
             for (int x = 0; x < leveys; x++) {
                 Color vari = pikselinLukija.getColor(x, y);
-                if(vari.equals(Color.BLACK)) {
+                if (vari.equals(Color.BLACK)) {
                     reitinhaku.lisaaKarttaan(x, y, 1);
                 } else {
                     reitinhaku.lisaaKarttaan(x, y, 0);
@@ -87,71 +94,101 @@ public class UI extends Application {
         
         //gridin asettelu
         GridPane grid = new GridPane();
-        grid.setPrefSize(900, 500);
+        grid.setPrefSize(900, 700);
         grid.setAlignment(Pos.CENTER);
-        grid.setVgap(20);
-        grid.setHgap(20);
+        grid.setVgap(10);
+        grid.setHgap(30);
         grid.setPadding(new Insets(20, 20, 20, 20));
-        grid.add(kartta, 0, 0);
-        GridPane.setColumnSpan(kartta, 11);
-        //piirraTausta(canvas.getGraphicsContext2D());
-        //piirtoalusta.drawImage(lontoo, 0, 0);
+        grid.add(canvas, 0, 0);
+        GridPane.setColumnSpan(canvas, 5);
+        GridPane.setHalignment(canvas, HPos.CENTER);
+        
         
         //Tekstikentät ja napit
+        //lisaaTekstikentat();
         Label lahtoTeksti = new Label("Anna lähtöpaikan koordinaatit:");
         Label lahtoX = new Label("X");
-        TextField lahtoXKentta = new TextField();
+        TextField lahtoXkentta = new TextField();
+        lahtoXkentta.setPrefWidth(50);
+        
         Label lahtoY = new Label("Y");
-        TextField lahtoYKentta = new TextField();
+        TextField lahtoYkentta = new TextField();
+        lahtoYkentta.setPrefWidth(50);
+        HBox lahtoKoordinaatit = new HBox(8);
+        lahtoKoordinaatit.getChildren().addAll(lahtoX, lahtoXkentta, lahtoY, lahtoYkentta);
+        lahtoKoordinaatit.setAlignment(Pos.CENTER_LEFT);
         
         Label maaliTeksti = new Label("Anna määränpään koordinaatit:");
         Label maaliX = new Label("X");
-        TextField maaliXKentta = new TextField();
+        TextField maaliXkentta = new TextField();
+        maaliXkentta.setPrefWidth(50);
+        
         Label maaliY = new Label("Y");
-        TextField maaliYKentta = new TextField();
+        TextField maaliYkentta = new TextField();
+        maaliYkentta.setPrefWidth(50);
+        HBox maaliKoordinaatit = new HBox(8);
+        maaliKoordinaatit.getChildren().addAll(maaliX, maaliXkentta, maaliY, maaliYkentta);
+        maaliKoordinaatit.setAlignment(Pos.CENTER_LEFT);
         
+        //lisää valintanapit ja buttonit
+        Label hakutapa = new Label("Valitse hakualgoritmi:");
         ToggleGroup valintaNapit = new ToggleGroup();
-        RadioButton rb_AStar = new RadioButton();
-        RadioButton rb_Fringe = new RadioButton();
-        rb_AStar.setToggleGroup(valintaNapit);
-        rb_AStar.setText("A*");
-        rb_Fringe.setToggleGroup(valintaNapit);
-        rb_Fringe.setText("Fringe");
+        RadioButton rbAStar = new RadioButton();
+        RadioButton rbFringe = new RadioButton();
+        rbAStar.setToggleGroup(valintaNapit);
+        rbAStar.setText("A*");
+        rbFringe.setToggleGroup(valintaNapit);
+        rbFringe.setText("Fringe");
+        HBox napit = new HBox(8);
+        napit.getChildren().addAll(rbAStar, rbFringe);
+        napit.setAlignment(Pos.CENTER_LEFT);
         
-        //voiko koordinaatit laittaa valikkoon??? tämä kömpelöä
+        
+        
+        //poimitaan tekstikentistä koordinaatit
+        
 //        int aX = Integer.valueOf(lahtoXKentta.getText());
 //        int aY = Integer.valueOf(lahtoYKentta.getText());
 //        int bX = Integer.valueOf(maaliXKentta.getText());
 //        int bY = Integer.valueOf(maaliYKentta.getText());
-        
+        Label virheTeksti = new Label();
+
         Button hakuNappi = new Button("Hae");
         hakuNappi.setOnAction((event) -> {
             reitinhaku.alustaHaku();
-            reitinhaku.suoritaHaku(0, 770, 600, 390, 1);
-            piirraReitti(reitinhaku.getLyhinReitti());
-            System.out.println("lyhin reitti alkaa: " + reitinhaku.getLyhinReitti().get(0));
+            
+            int aX = haeKoordinaatti(lahtoXkentta.getText(), virheTeksti);
+            int aY = haeKoordinaatti(lahtoYkentta.getText(), virheTeksti);
+            int bX = haeKoordinaatti(maaliXkentta.getText(), virheTeksti);
+            int bY = haeKoordinaatti(maaliYkentta.getText(), virheTeksti);
+            reitinhaku.suoritaHaku(aX, aY, bX, bY, 1);
+            piirraReitti(reitinhaku.getLyhinReitti(), piirtoalusta);
         });
         
+        Button tyhjennaNappi = new Button("Tyhjennä valinnat");
+        tyhjennaNappi.setOnAction((event) -> {
+            reitinhaku.alustaHaku();
+            //tyhjennä tekstikentät ja piirretty reitti
+            lahtoXkentta.clear();
+            lahtoYkentta.clear();
+            maaliXkentta.clear();
+            maaliYkentta.clear();
+            piirtoalusta.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            piirtoalusta.drawImage(karttaKuva, 0, 0);
+            virheTeksti.setText("");
+        });
+        
+        
         //elementtien asettelu gridiin
-        grid.add(lahtoTeksti, 1, 1);
-        GridPane.setColumnSpan(lahtoTeksti, 4);
-        grid.add(maaliTeksti, 5, 1);
-        GridPane.setColumnSpan(maaliTeksti, 4);
-        
-        grid.add(lahtoX, 0, 2);
-        grid.add(lahtoXKentta, 1, 2);
-        grid.add(lahtoY, 2, 2);
-        grid.add(lahtoYKentta, 3, 2);
-        
-        grid.add(maaliX, 4, 2);
-        grid.add(maaliXKentta, 5, 2);
-        grid.add(maaliY, 6, 2);
-        grid.add(maaliYKentta, 7, 2);
-        
-        grid.add(rb_AStar, 8, 2);
-        grid.add(rb_Fringe, 9, 2);
-        grid.add(hakuNappi, 10, 2);
-        //GridPane.setHalignment(rb_AStar, HPos.CENTER);
+        grid.add(lahtoTeksti, 0, 1);
+        grid.add(maaliTeksti, 1, 1);
+        grid.add(lahtoKoordinaatit, 0, 2);
+        grid.add(maaliKoordinaatit, 1, 2);
+        grid.add(napit, 2, 2);
+        grid.add(hakuNappi, 3, 2);
+        grid.add(tyhjennaNappi, 4, 2);
+        grid.add(virheTeksti, 0, 3);
+        GridPane.setColumnSpan(virheTeksti, 4);
         
         
         
@@ -164,15 +201,58 @@ public class UI extends Application {
                
     }
     
-    //Miten toteutetaan reitin piirtäminen??
-    public void piirraReitti(ArrayList<Solmu> reitti) {
+    //reitin piirtäminen kartalle
+    public void piirraReitti(ArrayList<Solmu> reitti, GraphicsContext alusta) {
         for (Solmu s : reitti) {
-            int x = s.getX();
-            int y = s.getY();
-            //kirjoittaja.setColor(x, y, Color.RED);
-            //Circle c = new Circle(x, y, 10, Color.RED);
+            alusta.setFill(Color.RED);
+            alusta.fillOval(s.getX() - 2, s.getY() - 2, 4, 4);
         }
     }
+    
+    //reitin pyyhkiminen kartalta
+    public void tyhjennaReitti(ArrayList<Solmu> reitti, GraphicsContext alusta) {
+        for (Solmu s : reitti) {
+            //tyhjennä väritykset
+            alusta.setFill(Color.TRANSPARENT);
+            alusta.fillOval(s.getX() - 2, s.getY() - 2, 4, 4);
+        }
+    }
+    
+    //tämä vielä koodissa ylempänä
+    public void lisaaTekstikentat() {
+        Label lahtoTeksti = new Label("Anna lähtöpaikan koordinaatit:");
+        Label lahtoX = new Label("X");
+        TextField lahtoXKentta = new TextField();
+        Label lahtoY = new Label("Y");
+        TextField lahtoYKentta = new TextField();
+        
+        Label maaliTeksti = new Label("Anna määränpään koordinaatit:");
+        Label maaliX = new Label("X");
+        TextField maaliXKentta = new TextField();
+        Label maaliY = new Label("Y");
+        TextField maaliYKentta = new TextField();
+    }
+    
+    public int haeKoordinaatti(String numero, Label label) {
+        int koordinaatti = -1;
+        if (!numero.isEmpty()) {
+            try {
+                koordinaatti = Integer.parseInt(numero);
+                if (koordinaatti < 0 || koordinaatti > leveys) {
+                    throw new IllegalArgumentException("Syötit negatiivisen luvun."); 
+                    //label.setText("Syötit negatiivisen luvun.");
+                }
+//            } catch (IllegalArgumentException i) {
+//                label.setText("väärä luku");
+            } catch (Exception e) {
+                label.setText("Et syöttänyt kunnollista numeroa.");
+            } 
+        } else {
+            label.setText("Anna koordinaatit.") ;
+        }
+        
+        return koordinaatti;
+    } 
     
     public static void main(String[] args) {
         launch(args);

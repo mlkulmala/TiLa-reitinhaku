@@ -44,8 +44,8 @@ public class Reitinhaku {
     public void alustaHaku() {
         this.etaisyydet = new double[korkeus][leveys];
         int INF = 999999999;
-        for(int i = 0; i < etaisyydet.length; i++) {
-            for(int j = 0; j < etaisyydet[0].length; j++) {
+        for (int i = 0; i < etaisyydet.length; i++) {
+            for (int j = 0; j < etaisyydet[0].length; j++) {
                 etaisyydet[i][j] = INF;
             }
         }
@@ -59,7 +59,7 @@ public class Reitinhaku {
 //        }
         kasitelty = new boolean[korkeus + 1][leveys + 1];
         lyhinReitti = new ArrayList<>();
-        suunnat = new int[][]{{-1,0},{-1,-1},{0,-1},{1,-1},{1,0},{1,1},{0,1},{-1,1}};
+        suunnat = new int[][]{{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
     }
     
     //alustava hakualgoritmi
@@ -68,21 +68,25 @@ public class Reitinhaku {
         jono.add(new Solmu(ax, ay, 0));
         //System.out.println(jono.poll()); //ok
         
-        while(!jono.isEmpty()) {
+        while (!jono.isEmpty()) {
             Solmu nykyinen = jono.poll();
             int nx = nykyinen.getX();
             int ny = nykyinen.getY();
-            if(kasitelty[ny][nx]) continue;
+            if (kasitelty[ny][nx]) {
+                continue;
+            }
             kasitelty[ny][nx] = true;
             //System.out.println("kasitelty[" + ny + "][" + nx + "]" + kasitelty[ny][nx]);
             
-            if (nx == bx && ny == by) break;
+            if (nx == bx && ny == by) {
+                break;
+            }
             //käy läpi 8 suuntaa
-            for(int i = 0; i < 8; i++) {
+            for (int i = 0; i < 8; i++) {
                 int uy = ny + suunnat[i][0];
                 int ux = nx + suunnat[i][1];
                 //tarkistetaan, että piste on kuva-alueen sisällä eikä ole seinää
-                if(uy < korkeus && uy >= 0 && ux < leveys && ux >= 0 && kartta[uy][ux] != 1) {
+                if (uy < korkeus && uy >= 0 && ux < leveys && ux >= 0 && kartta[uy][ux] != 1) {
                     double nykyinenEtaisyys = etaisyydet[uy][ux];
                     double etaisyydenLisays = 1;
                     //jos liikutaan viistosti (etäisyys on sqrt(2))
@@ -91,7 +95,7 @@ public class Reitinhaku {
                     } 
                     double uusiEtaisyys = etaisyydet[ny][nx] + etaisyydenLisays;
                     //Jos haku A* algorimilla, lisättävä vielä h(x) (arvio etaisyydestä)
-                    if(uusiEtaisyys < nykyinenEtaisyys) {
+                    if (uusiEtaisyys < nykyinenEtaisyys) {
                         etaisyydet[uy][ux] = uusiEtaisyys;
                         jono.add(new Solmu(ux, uy, uusiEtaisyys));
                         mista[uy][ux] = nykyinen;
@@ -99,8 +103,8 @@ public class Reitinhaku {
                 } 
             }
         }
-        System.out.println("mista[by]{bx] " + mista[by][bx]);
-        System.out.println(ax + ", " + ay + " ja " + bx + ", " + by);
+//        System.out.println("mista[by]{bx] " + mista[by][bx]);
+//        System.out.println(ax + ", " + ay + " ja " + bx + ", " + by);
         
         //lyhimmän reitin muodostus "peruuttamalla"
         while (!(bx == ax && by == ay)) {

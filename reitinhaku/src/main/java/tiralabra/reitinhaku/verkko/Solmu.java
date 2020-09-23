@@ -36,7 +36,7 @@ public class Solmu implements Comparable<Solmu> {
     public int compareTo(Solmu s) {
         if (this.etaisyys - s.etaisyys > 0) {
             return 1;
-        } else if(this.etaisyys - s.etaisyys < 0) {
+        } else if (this.etaisyys - s.etaisyys < 0) {
             return -1;
         } else {
             return 0;
