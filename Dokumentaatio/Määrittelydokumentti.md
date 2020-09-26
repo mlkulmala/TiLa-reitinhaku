@@ -15,5 +15,6 @@ A* algoritmin aikavaativuus on samaa luokkaa kuuin Dijkstran, O((|E|+|V|)log|V|)
 Työ toteutetaan Javalla ja dokumentointikielenä on suomi. Tekijä kuuluu tietojenkäsittelytieteen kandiohjelmaan.
 
 ## Käytetyt lähteet
-Antti Laaksonen: Tietorakenteet ja algoritmit, luentomoniste, 22.8.2019. Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein: Introduction to Algorithms, Third Edition.
-
+Antti Laaksonen: Tietorakenteet ja algoritmit, luentomoniste, 22.8.2019. 
+Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein: Introduction to Algorithms, Third Edition.
+Y. Björnsson, M. Enzenberger, R.C. Holte and J. Schaeffer: Finge Search: Beating A* at Pathfinding on Game Maps. URL: https://webdocs.cs.ualberta.ca/~holte/Publications/fringe.pdf
