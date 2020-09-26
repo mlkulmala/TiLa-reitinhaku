@@ -7,6 +7,7 @@ package tiralabra.reitinhaku.verkko;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.PriorityQueue;
 import javafx.scene.image.PixelWriter;
 
@@ -22,7 +23,6 @@ public class Reitinhaku {
     int[][] kartta;
     double[][] etaisyydet;
     Solmu[][] mista;
-    //ArrayList<Kaari>[][] verkko;
     ArrayList<Solmu> lyhinReitti;
     int[][] suunnat;
     double reitinPituus;
@@ -40,6 +40,13 @@ public class Reitinhaku {
         kartta[y][x] = arvo;
     }
     
+    public boolean onkoKadulla(int x, int y) {
+        if (kartta[y][x] == 0) {
+            return true;
+        }
+        return false;
+    }
+    
     //alustetaan tietorakenteet
     public void alustaHaku() {
         this.etaisyydet = new double[korkeus][leveys];
@@ -51,22 +58,19 @@ public class Reitinhaku {
         }
         this.mista = new Solmu[korkeus][leveys];
         jono = new PriorityQueue<>();
-//        verkko = new ArrayList[korkeus + 1][leveys + 1];
-//        for (int i=1; i<korkeus+1; i++) {
-//            for (int j=1; j<leveys+1; j++) {
-//                verkko[i][j] = new ArrayList<>();
-//            }
-//        }
         kasitelty = new boolean[korkeus + 1][leveys + 1];
         lyhinReitti = new ArrayList<>();
         suunnat = new int[][]{{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
     }
     
     //alustava hakualgoritmi
-    public void suoritaHaku(int ax, int ay, int bx, int by, int hakutapa) {
+    public void suoritaHaku(List<Integer> koordinaatit, int hakutapa) {
+        int ax = koordinaatit.get(0);
+        int ay = koordinaatit.get(1);
+        int bx = koordinaatit.get(2);
+        int by = koordinaatit.get(3);
         etaisyydet[ay][ax] = 0;
         jono.add(new Solmu(ax, ay, 0));
-        //System.out.println(jono.poll()); //ok
         
         while (!jono.isEmpty()) {
             Solmu nykyinen = jono.poll();
@@ -76,7 +80,6 @@ public class Reitinhaku {
                 continue;
             }
             kasitelty[ny][nx] = true;
-            //System.out.println("kasitelty[" + ny + "][" + nx + "]" + kasitelty[ny][nx]);
             
             if (nx == bx && ny == by) {
                 break;
@@ -94,26 +97,33 @@ public class Reitinhaku {
                         etaisyydenLisays = Math.sqrt(2);
                     } 
                     double uusiEtaisyys = etaisyydet[ny][nx] + etaisyydenLisays;
-                    //Jos haku A* algorimilla, lisättävä vielä h(x) (arvio etaisyydestä)
+                    //Jos haku A* algorimilla (tapa 2), lisättävä vielä h(x) (arvio etaisyydestä)
+                    double h = 0;
+                    if (hakutapa == 2) {
+                        int x = (ux - bx) > 0 ? (ux - bx) : (bx - ux);
+                        int y = (uy - by) > 0 ? (uy - by) : (by - uy);
+                        h = Math.sqrt(x * x + y * y);
+                    }
                     if (uusiEtaisyys < nykyinenEtaisyys) {
                         etaisyydet[uy][ux] = uusiEtaisyys;
-                        jono.add(new Solmu(ux, uy, uusiEtaisyys));
+                        jono.add(new Solmu(ux, uy, uusiEtaisyys + h));
                         mista[uy][ux] = nykyinen;
                     }
                 } 
             }
         }
-//        System.out.println("mista[by]{bx] " + mista[by][bx]);
-//        System.out.println(ax + ", " + ay + " ja " + bx + ", " + by);
         
         //lyhimmän reitin muodostus "peruuttamalla"
         while (!(bx == ax && by == ay)) {
             Solmu v = mista[by][bx];
-            lyhinReitti.add(v);
-            System.out.println(v);
-            by = v.getY();
-            bx = v.getX();
-            reitinPituus += v.getEtaisyys();
+            if (v != null) {
+                lyhinReitti.add(v);
+                by = v.getY();
+                bx = v.getX();
+                reitinPituus += v.getEtaisyys();
+            } else {
+                break;
+            }
         }
         Collections.sort(lyhinReitti);
 

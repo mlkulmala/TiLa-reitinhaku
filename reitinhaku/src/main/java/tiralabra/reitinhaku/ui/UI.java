@@ -14,12 +14,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.Label;
@@ -27,11 +23,8 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 import tiralabra.reitinhaku.verkko.Reitinhaku;
 import tiralabra.reitinhaku.verkko.Solmu;
@@ -44,46 +37,61 @@ public class UI extends Application {
     
     private Stage stage;
     private Reitinhaku reitinhaku;
-    private PixelWriter kirjoittaja;
-    private WritableImage reititKuvassa;
-    private int leveys, korkeus;
-    
+    private int leveys, korkeus, aX, bX, aY, bY;
+    private Label virheIlmoitus = new Label("");
+    List<Integer> koordinaatit;
+    private boolean lahtoValittu;
+    private GridPane grid;
+    private Canvas canvas;
+    private GraphicsContext piirtoalusta;
+    private Image kartta;
+    private TextField lahtoX, lahtoY, maaliX, maaliY;
     
     @Override
     public void start(Stage stage) {
         stage.setTitle("Reitinhaku");
         this.stage = stage;
         reitinhaku = new Reitinhaku();
-        
-        
 
         //kuvan lukeminen
-        //Image lontoo = new Image("file:Lontoo_700px.JPG", 700, 471, true, false);
-        //Image lontoo = new Image("file:Milano_rajattu.png, 700, 389, true, false");
-        //Image lontoo = new Image("file:Lontoo_700px.JPG");
-        Image karttaKuva = new Image("file:Milano_bitmap.bmp", 768, 427, true, false);
-        leveys = (int) karttaKuva.getWidth();
-        korkeus = (int) karttaKuva.getHeight();
+        kartta = new Image("file:Milano_bitmap.bmp", 768, 427, true, false);
+        leveys = (int) kartta.getWidth();
+        korkeus = (int) kartta.getHeight();
         
-        PixelReader pikselinLukija = karttaKuva.getPixelReader();
-        
-        //ImageView kartta = new ImageView(lontoo);
-//        kartta.setFitWidth(700);
-//        kartta.setPreserveRatio(true);
+        PixelReader pikselinLukija = kartta.getPixelReader();
+        luePikselitTaulukkoon(pikselinLukija);
 
-        //luodaan canvas ja tuodaan siihen kuva
-        Canvas canvas = new Canvas(800, 430);
-        GraphicsContext piirtoalusta = canvas.getGraphicsContext2D();
-        piirtoalusta.drawImage(karttaKuva, 0, 0);
+        luoGridPane();
+        luoPiirtoalusta();
+        piirtoalusta.drawImage(kartta, 0, 0);
         
-       
+        lisaaKoordinaattienSyotto();
+        lisaaKoordinaattienHakuKartalta();
+                
+        List<TextField> kentat = new ArrayList<>();
+        kentat.add(lahtoX);
+        kentat.add(lahtoY);
+        kentat.add(maaliX);
+        kentat.add(maaliY);
         
-        //pohjusta taulukko [rivit][sarakkeet]
+        lisaaAlgoritminValinta();
+      
+        lisaaReitinhakuNappi(kentat);
+        lisaaTyhjennaNappi();
+     
+        grid.add(virheIlmoitus, 0, 3);
+        GridPane.setColumnSpan(virheIlmoitus, 4);
+        
+        Scene scene = new Scene(grid, 1000, 600);
+        stage.setScene(scene);
+        stage.show();      
+    }
+    
+    public void luePikselitTaulukkoon(PixelReader lukija) {
         reitinhaku.alustaKartta(leveys, korkeus);
-        //kuvan pikselien lukeminen
         for (int y = 0; y < korkeus; y++) {
             for (int x = 0; x < leveys; x++) {
-                Color vari = pikselinLukija.getColor(x, y);
+                Color vari = lukija.getColor(x, y);
                 if (vari.equals(Color.BLACK)) {
                     reitinhaku.lisaaKarttaan(x, y, 1);
                 } else {
@@ -91,46 +99,76 @@ public class UI extends Application {
                 }
             }
         }
-        
-        //gridin asettelu
-        GridPane grid = new GridPane();
+    }
+    
+    public void luoGridPane() {
+        grid = new GridPane();
         grid.setPrefSize(900, 700);
         grid.setAlignment(Pos.CENTER);
         grid.setVgap(10);
         grid.setHgap(30);
         grid.setPadding(new Insets(20, 20, 20, 20));
+    }
+    
+    public void luoPiirtoalusta() {
+        canvas = new Canvas(800, 430);
+        piirtoalusta = canvas.getGraphicsContext2D();
         grid.add(canvas, 0, 0);
         GridPane.setColumnSpan(canvas, 5);
         GridPane.setHalignment(canvas, HPos.CENTER);
+    }
+    
+    public void lisaaKoordinaattienSyotto() {
+        Label lbLahtoTeksti = new Label("Anna lähtöpaikan koordinaatit:");
+        Label lbLahtoX = new Label("X");
+        lahtoX = new TextField();
+        lahtoX.setPrefWidth(50);
         
-        
-        //Tekstikentät ja napit
-        //lisaaTekstikentat();
-        Label lahtoTeksti = new Label("Anna lähtöpaikan koordinaatit:");
-        Label lahtoX = new Label("X");
-        TextField lahtoXkentta = new TextField();
-        lahtoXkentta.setPrefWidth(50);
-        
-        Label lahtoY = new Label("Y");
-        TextField lahtoYkentta = new TextField();
-        lahtoYkentta.setPrefWidth(50);
+        Label lbLahtoY = new Label("Y");
+        lahtoY = new TextField();
+        lahtoY.setPrefWidth(50);
         HBox lahtoKoordinaatit = new HBox(8);
-        lahtoKoordinaatit.getChildren().addAll(lahtoX, lahtoXkentta, lahtoY, lahtoYkentta);
+        lahtoKoordinaatit.getChildren().addAll(lbLahtoX, lahtoX, lbLahtoY, lahtoY);
         lahtoKoordinaatit.setAlignment(Pos.CENTER_LEFT);
         
         Label maaliTeksti = new Label("Anna määränpään koordinaatit:");
-        Label maaliX = new Label("X");
-        TextField maaliXkentta = new TextField();
-        maaliXkentta.setPrefWidth(50);
+        Label lbMaaliX = new Label("X");
+        maaliX = new TextField();
+        maaliX.setPrefWidth(50);
         
-        Label maaliY = new Label("Y");
-        TextField maaliYkentta = new TextField();
-        maaliYkentta.setPrefWidth(50);
+        Label lbMaaliY = new Label("Y");
+        maaliY = new TextField();
+        maaliY.setPrefWidth(50);
         HBox maaliKoordinaatit = new HBox(8);
-        maaliKoordinaatit.getChildren().addAll(maaliX, maaliXkentta, maaliY, maaliYkentta);
+        maaliKoordinaatit.getChildren().addAll(lbMaaliX, maaliX, lbMaaliY, maaliY);
         maaliKoordinaatit.setAlignment(Pos.CENTER_LEFT);
         
-        //lisää valintanapit ja buttonit
+        grid.add(lbLahtoTeksti, 0, 1);
+        grid.add(maaliTeksti, 1, 1);
+        grid.add(lahtoKoordinaatit, 0, 2);
+        grid.add(maaliKoordinaatit, 1, 2);
+    }
+    
+    public void lisaaKoordinaattienHakuKartalta() {
+        canvas.setOnMouseClicked(event -> {
+            double x = event.getX(), y = event.getY();
+            if (!lahtoValittu) {
+                aX = (int) Math.round(x);
+                aY = (int) Math.round(y);
+                lahtoValittu = true;
+                lahtoX.setText(Integer.toString(aX));
+                lahtoY.setText(Integer.toString(aY));
+            } else {
+                bX = (int) Math.round(x);
+                bY = (int) Math.round(y);
+                lahtoValittu = false;
+                maaliX.setText(Integer.toString(bX));
+                maaliY.setText(Integer.toString(bY));
+            }
+        });
+    }
+    
+    public void lisaaAlgoritminValinta() {
         Label hakutapa = new Label("Valitse hakualgoritmi:");
         ToggleGroup valintaNapit = new ToggleGroup();
         RadioButton rbAStar = new RadioButton();
@@ -142,64 +180,67 @@ public class UI extends Application {
         HBox napit = new HBox(8);
         napit.getChildren().addAll(rbAStar, rbFringe);
         napit.setAlignment(Pos.CENTER_LEFT);
-        
-        
-        
-        //poimitaan tekstikentistä koordinaatit
-        
-//        int aX = Integer.valueOf(lahtoXKentta.getText());
-//        int aY = Integer.valueOf(lahtoYKentta.getText());
-//        int bX = Integer.valueOf(maaliXKentta.getText());
-//        int bY = Integer.valueOf(maaliYKentta.getText());
-        Label virheTeksti = new Label();
-
+        grid.add(napit, 2, 2);
+    }
+    
+    public void lisaaReitinhakuNappi(List<TextField> kentat) {
         Button hakuNappi = new Button("Hae");
+        grid.add(hakuNappi, 3, 2);
+        
         hakuNappi.setOnAction((event) -> {
             reitinhaku.alustaHaku();
-            
-            int aX = haeKoordinaatti(lahtoXkentta.getText(), virheTeksti);
-            int aY = haeKoordinaatti(lahtoYkentta.getText(), virheTeksti);
-            int bX = haeKoordinaatti(maaliXkentta.getText(), virheTeksti);
-            int bY = haeKoordinaatti(maaliYkentta.getText(), virheTeksti);
-            reitinhaku.suoritaHaku(aX, aY, bX, bY, 1);
-            piirraReitti(reitinhaku.getLyhinReitti(), piirtoalusta);
+            //putsataan pöytä jos vanhoja reittihakuja:
+            virheIlmoitus.setText("");
+            piirtoalusta.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            piirtoalusta.drawImage(kartta, 0, 0);
+
+            List<Integer> koordinaatit = haeKoordinaatit(kentat);
+            if (koordinaatit.size() < 4) {
+                return;
+            }
+            aX = koordinaatit.get(0);
+            aY = koordinaatit.get(1);
+            bX = koordinaatit.get(2);
+            bY = koordinaatit.get(3);
+            if (aX < 0 || aX > leveys - 1 || aY < 0 || aY > korkeus - 1) {
+                virheIlmoitus.setText("Tarkista lähtöpisteen koordinaatit. Voit myös valita reitin alku- ja päätepisteen kartalta.");
+                return;
+            } 
+            if (bX < 0 || bX > leveys - 1 || bY < 0 || bY > korkeus - 1) {
+                virheIlmoitus.setText("Tarkista päätepisteen koordinaatit. Voit myös valita reitin alku- ja päätepisteen kartalta.");
+                return;
+            } 
+            if (!reitinhaku.onkoKadulla(aX, aY) || !reitinhaku.onkoKadulla(bX, bY)) {
+                virheIlmoitus.setText("Jompikumpi valitsemistasi pisteistä on rakennuksen tai seinän sisällä.");
+            } else {
+                reitinhaku.suoritaHaku(koordinaatit, 1);   //hakutapa 1 viittaa tällä hetkellä Dijkstraan
+                if (reitinhaku.getLyhinReitti().isEmpty()) {
+                    virheIlmoitus.setText("Valitsemiesi pisteiden välillä ei ole reittiä.");
+                } else {
+                    piirraReitti(reitinhaku.getLyhinReitti(), piirtoalusta);
+                }
+            }
         });
         
+    }
+    
+    public void lisaaTyhjennaNappi() {
         Button tyhjennaNappi = new Button("Tyhjennä valinnat");
         tyhjennaNappi.setOnAction((event) -> {
             reitinhaku.alustaHaku();
             //tyhjennä tekstikentät ja piirretty reitti
-            lahtoXkentta.clear();
-            lahtoYkentta.clear();
-            maaliXkentta.clear();
-            maaliYkentta.clear();
+            //
+            lahtoX.clear();
+            lahtoY.clear();
+            maaliX.clear();
+            maaliY.clear();
             piirtoalusta.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            piirtoalusta.drawImage(karttaKuva, 0, 0);
-            virheTeksti.setText("");
+            piirtoalusta.drawImage(kartta, 0, 0);
+            virheIlmoitus.setText("");
         });
-        
-        
-        //elementtien asettelu gridiin
-        grid.add(lahtoTeksti, 0, 1);
-        grid.add(maaliTeksti, 1, 1);
-        grid.add(lahtoKoordinaatit, 0, 2);
-        grid.add(maaliKoordinaatit, 1, 2);
-        grid.add(napit, 2, 2);
-        grid.add(hakuNappi, 3, 2);
         grid.add(tyhjennaNappi, 4, 2);
-        grid.add(virheTeksti, 0, 3);
-        GridPane.setColumnSpan(virheTeksti, 4);
-        
-        
-        
-        
-        Scene scene = new Scene(grid, 1000, 600);
-       
-        stage.setScene(scene);
-        stage.show();
-           
-               
     }
+    
     
     //reitin piirtäminen kartalle
     public void piirraReitti(ArrayList<Solmu> reitti, GraphicsContext alusta) {
@@ -218,41 +259,24 @@ public class UI extends Application {
         }
     }
     
-    //tämä vielä koodissa ylempänä
-    public void lisaaTekstikentat() {
-        Label lahtoTeksti = new Label("Anna lähtöpaikan koordinaatit:");
-        Label lahtoX = new Label("X");
-        TextField lahtoXKentta = new TextField();
-        Label lahtoY = new Label("Y");
-        TextField lahtoYKentta = new TextField();
-        
-        Label maaliTeksti = new Label("Anna määränpään koordinaatit:");
-        Label maaliX = new Label("X");
-        TextField maaliXKentta = new TextField();
-        Label maaliY = new Label("Y");
-        TextField maaliYKentta = new TextField();
-    }
     
-    public int haeKoordinaatti(String numero, Label label) {
-        int koordinaatti = -1;
-        if (!numero.isEmpty()) {
-            try {
-                koordinaatti = Integer.parseInt(numero);
-                if (koordinaatti < 0 || koordinaatti > leveys) {
-                    throw new IllegalArgumentException("Syötit negatiivisen luvun."); 
-                    //label.setText("Syötit negatiivisen luvun.");
-                }
-//            } catch (IllegalArgumentException i) {
-//                label.setText("väärä luku");
-            } catch (Exception e) {
-                label.setText("Et syöttänyt kunnollista numeroa.");
-            } 
-        } else {
-            label.setText("Anna koordinaatit.") ;
-        }
-        
-        return koordinaatti;
+    public List<Integer> haeKoordinaatit(List<TextField> kentat) {
+        koordinaatit = new ArrayList<>();
+        try {
+            for (TextField kentta : kentat) {
+                int koordinaatti = Integer.valueOf(kentta.getText());
+                koordinaatit.add(koordinaatti);
+            }
+        } catch (Exception e) {
+            virheIlmoitus.setText("Et antanut kaikkia koordinaatteja. Voit myös valita reitin alku- ja päätepisteen kartalta.");
+        } 
+        return koordinaatit;
     } 
+    
+    
+    
+    
+    
     
     public static void main(String[] args) {
         launch(args);
