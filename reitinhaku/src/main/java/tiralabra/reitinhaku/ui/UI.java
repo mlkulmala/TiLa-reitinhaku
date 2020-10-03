@@ -27,7 +27,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import tiralabra.reitinhaku.verkko.Reitinhaku;
-import tiralabra.reitinhaku.verkko.Solmu;
+import tiralabra.reitinhaku.verkko.Ruutu;
 
 /**
  *
@@ -213,7 +213,8 @@ public class UI extends Application {
             if (!reitinhaku.onkoKadulla(aX, aY) || !reitinhaku.onkoKadulla(bX, bY)) {
                 virheIlmoitus.setText("Jompikumpi valitsemistasi pisteistä on rakennuksen tai seinän sisällä.");
             } else {
-                reitinhaku.suoritaHaku(koordinaatit, 1);   //hakutapa 1 viittaa tällä hetkellä Dijkstraan
+                reitinhaku.fringeSearch(koordinaatit);
+                //reitinhaku.suoritaHaku(koordinaatit, 1);   //hakutapa 1 viittaa tällä hetkellä Dijkstraan
                 if (reitinhaku.getLyhinReitti().isEmpty()) {
                     virheIlmoitus.setText("Valitsemiesi pisteiden välillä ei ole reittiä.");
                 } else {
@@ -243,16 +244,16 @@ public class UI extends Application {
     
     
     //reitin piirtäminen kartalle
-    public void piirraReitti(ArrayList<Solmu> reitti, GraphicsContext alusta) {
-        for (Solmu s : reitti) {
+    public void piirraReitti(ArrayList<Ruutu> reitti, GraphicsContext alusta) {
+        for (Ruutu s : reitti) {
             alusta.setFill(Color.RED);
             alusta.fillOval(s.getX() - 2, s.getY() - 2, 4, 4);
         }
     }
     
     //reitin pyyhkiminen kartalta
-    public void tyhjennaReitti(ArrayList<Solmu> reitti, GraphicsContext alusta) {
-        for (Solmu s : reitti) {
+    public void tyhjennaReitti(ArrayList<Ruutu> reitti, GraphicsContext alusta) {
+        for (Ruutu s : reitti) {
             //tyhjennä väritykset
             alusta.setFill(Color.TRANSPARENT);
             alusta.fillOval(s.getX() - 2, s.getY() - 2, 4, 4);

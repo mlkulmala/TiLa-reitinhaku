@@ -11,7 +11,7 @@ package tiralabra.reitinhaku.verkko;
  */
 public class Kaari {
     
-    private Solmu lahtoSolmu, maaliSolmu;
+    private Ruutu lahtoSolmu, maaliSolmu;
     private double kaarenPituus;
     
     /**
@@ -21,18 +21,18 @@ public class Kaari {
      * @param maali solmu, johon haettava reitti päättyy
      * @param pituus lähtö- ja maalisolmun välinen etäisyys
      */
-    public Kaari(Solmu lahto, Solmu maali, double pituus) {
+    public Kaari(Ruutu lahto, Ruutu maali, double pituus) {
         this.lahtoSolmu = lahto;
         this.maaliSolmu = maali;
         this.kaarenPituus = pituus;
                          
     }
     
-    public Solmu getLahtoSolmu() {
+    public Ruutu getLahtoSolmu() {
         return this.lahtoSolmu;
     }
     
-    public Solmu getMaaliSolmu() {
+    public Ruutu getMaaliSolmu() {
         return this.maaliSolmu;
     }
     

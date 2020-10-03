@@ -9,42 +9,43 @@ package tiralabra.reitinhaku.verkko;
  *
  * @author mlkul
  */
-public class Solmu implements Comparable<Solmu> {
+public class Solmu {
     
-    private int x, y;
-    double etaisyys;
+    private Solmu edellinen;
+    private Solmu seuraava;
+    private Ruutu ruutu;
     
-    public Solmu(int x, int y, double etaisyys) {
-        this.x = x;
-        this.y = y;
-        this.etaisyys = etaisyys;
+    public Solmu(Solmu edellinen, Solmu seuraava, Ruutu ruutu) {
+        this.edellinen = edellinen;
+        this.seuraava = seuraava;
+        this.ruutu = ruutu;
     }
     
-    public int getX() {
-        return this.x;
+    public Solmu(Ruutu ruutu) {
+        this.edellinen = null;
+        this.seuraava = null;
+        this.ruutu = ruutu;
     }
     
-    public int getY() {
-        return this.y;
+    public Solmu getEdellinen() {
+        return this.edellinen;
     }
     
-    public double getEtaisyys() {
-        return this.etaisyys;
+    public Solmu getSeuraava() {
+        return this.seuraava;
     }
     
-    @Override
-    public int compareTo(Solmu s) {
-        if (this.etaisyys - s.etaisyys > 0) {
-            return 1;
-        } else if (this.etaisyys - s.etaisyys < 0) {
-            return -1;
-        } else {
-            return 0;
-        }
+    public Ruutu getRuutu() {
+        return this.ruutu;
     }
     
-    @Override
-    public String toString() {
-        return "(" + this.x + ", " + this.y + ")";
+    public void setEdellinen(Solmu solmu) {
+        this.edellinen = solmu;
     }
+    
+    public void setSeuraava(Solmu solmu) {
+        this.seuraava = solmu;
+    }
+    
+    
 }
