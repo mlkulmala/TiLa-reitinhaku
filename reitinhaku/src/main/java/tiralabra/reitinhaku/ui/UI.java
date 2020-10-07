@@ -213,8 +213,8 @@ public class UI extends Application {
             if (!reitinhaku.onkoKadulla(aX, aY) || !reitinhaku.onkoKadulla(bX, bY)) {
                 virheIlmoitus.setText("Jompikumpi valitsemistasi pisteistä on rakennuksen tai seinän sisällä.");
             } else {
-                //reitinhaku.fringeSearch(koordinaatit);
-                reitinhaku.suoritaHaku(koordinaatit, 1);   //hakutapa 1 viittaa tällä hetkellä Dijkstraan
+                reitinhaku.fringeSearch(koordinaatit);
+                //reitinhaku.suoritaHaku(koordinaatit, 1);   //hakutapa 1 viittaa tällä hetkellä Dijkstraan
                 if (reitinhaku.getLyhinReitti().isEmpty()) {
                     virheIlmoitus.setText("Valitsemiesi pisteiden välillä ei ole reittiä.");
                 } else {

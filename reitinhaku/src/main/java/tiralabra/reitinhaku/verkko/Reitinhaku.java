@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -161,65 +161,49 @@ public class Reitinhaku {
                     break;
                 }
                 double f = etaisyys[ny][nx] + euklidinenEtaisyys(nx, ny, bx, by);
-//                System.out.println("\npisteen (" + nx + "," + ny + ") f on " + f);
-//                System.out.println("fLimit on " + fLimit);
-//                System.out.println("onko f suurempi kuin fLimit:");
-//                System.out.println(f > fLimit);
-//                System.out.println("");
+                //System.out.println("\npisteen (" + nx + "," + ny + ") f on " + f);
+                System.out.println("fLimit on " + fLimit);
+                System.out.println("onko f suurempi kuin fLimit:");
+                System.out.println(f > fLimit);
+                System.out.println("");
                 if (f > fLimit) {
                     //fMin = f < fMin ? f : fMin;
                     fMin = Math.min(f, fMin);
-                    System.out.println("fMin: " + fMin + ", f: " + f);
+//                    System.out.println("fMin: " + fMin + ", f: " + f);
+//                    System.out.println("fLimit on " + fLimit);
                     nykyinen = nykyinen.getSeuraava();
                     continue;
                 }
                 for (int i = 0; i < 8; i++) {
                     int uy = ny + suunnat[i][0];
                     int ux = nx + suunnat[i][1];
-                    //System.out.println("lapsi " + i + ": (" + ux + "," + uy + ")");
+                    System.out.println("lapsi " + i + ": (" + ux + "," + uy + ")");
                     //tarkistetaan, että piste on kuva-alueen sisällä eikä ole seinää
                     if (uy < korkeus && uy >= 0 && ux < leveys && ux >= 0 && kartta[uy][ux] != 1) {
                         double etaisyydenLisays = 1;
-                        //jos liikutaan viistosti (etäisyys on sqrt(2))
                         if (!(suunnat[i][0] == 0 || suunnat[i][1] == 0)) {
                             etaisyydenLisays = Math.sqrt(2);
                         } 
                         //         g_s      =      g_n           +  cost(n,s)
                         double uusiEtaisyys = etaisyys[ny][nx] + etaisyydenLisays;
-                        //System.out.println("uusiEtaisyys " + uusiEtaisyys);
                         double nykyinenEtaisyys = etaisyys[uy][ux];
 
                         if (etaisyys[uy][ux] != inf && uusiEtaisyys > nykyinenEtaisyys) {
                             continue;
                         }
-    //                    if (uusiEtaisyys > nykyinenEtaisyys) {
-    //                        continue;
-    //                    }
+
                         etaisyys[uy][ux] = uusiEtaisyys;
                         mista[uy][ux] = nykyinen.getRuutu();
                         lista.lisaaLoppuun(new Solmu(new Ruutu(ux, uy, uusiEtaisyys)));
 //                        System.out.println("listan viimeinen on nyt " + lista.getViimeinen().getRuutu().toString());
 //                        System.out.println("listan eka on nyt " + lista.getEnsimmainen().getRuutu().toString());
-                        //System.out.println("nykyinen on " + nykyinen.getRuutu().toString());
-                        //System.out.println("lisätty listan loppuun (" + ux + "," + uy + ")");
                     } 
+                    lista.poistaSolmu(nykyinen);
                 }
-                //System.out.println("nykyistä seuraava ennen poistoa" + nykyinen.getSeuraava().getRuutu().toString());
-                lista.poistaSolmu(nykyinen);
-//                System.out.println("\npoistettu " + nykyinen.getRuutu().toString());
-                //System.out.println("listan viimeinen on nyt " + lista.getViimeinen().getRuutu().toString());
-                //System.out.println("listan eka on nyt " + lista.getEnsimmainen().getRuutu().toString());
-                                        
-//                Syst em.out.println("fMin on nyt " + fMin);
-                //System.out.println(lista.onTyhja());
-                //fLimit = fMin;
-                if (fMin != inf) {
-                    //System.out.println("fLimit ennen muutosta " + fLimit);
-                    fLimit = fMin;
-                    //System.out.println("fLimit on nyt fMin eli " + fMin);
-                    
-                }
-                //lista.tulostaListanSolmut();
+                
+                fLimit = fMin;
+                
+                lista.tulostaListanSolmut();
                 nykyinen = nykyinen.getSeuraava();
         }
         
