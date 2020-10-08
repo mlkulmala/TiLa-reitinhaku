@@ -34,12 +34,34 @@ public class LinkitettyLista {
         return this.viimeinen;
     }
     
-    public void setEnsimmainen(Solmu solmu) {
-        this.ensimmainen = solmu;
-    }
+    //lisää ensimmäinen solmu -> korjaa
+//    public void setEnsimmainenSolmu(Solmu solmu) {
+//        this.ensimmainen = solmu;
+//        this.viimeinen = solmu;
+//    }
     
-    public void setViimeinen(Solmu solmu) {
-        this.viimeinen = solmu;
+//    public boolean onkoListallaSolmu(Solmu solmu) {
+//        Solmu s = this.ensimmainen;
+//        while (s != null) {
+//            if (s == solmu) {
+//                return true;
+//            } else {
+//                s = s.getSeuraava();
+//            }
+//        }
+//        return false;
+//    }
+    
+    public boolean onkoListallaSolmu(int x, int y) {
+        Solmu s = this.ensimmainen;
+        while (s != null) {
+            if (s.getRuutu().getX() == x && s.getRuutu().getY() == y) {
+                return true;
+            } else {
+                s = s.getSeuraava();
+            }
+        }
+        return false;
     }
     
     public void lisaaSolmunJalkeen(Solmu solmu, Solmu uusiSolmu) {
@@ -97,6 +119,16 @@ public class LinkitettyLista {
             this.viimeinen = solmu.getEdellinen();
         } else {
             solmu.getSeuraava().setEdellinen(solmu.getEdellinen());
+        }
+    }
+    
+    public void poistaSolmuKoordinaateilla(int x, int y) {
+        Solmu s = this.ensimmainen;
+        while (s != null) {
+            if (s.getRuutu().getX() == x && s.getRuutu().getY() == y) {
+                poistaSolmu(s);
+            } 
+            s = s.getSeuraava();
         }
     }
     

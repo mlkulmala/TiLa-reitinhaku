@@ -48,17 +48,23 @@ public class LinkitettyListaTest {
         assertEquals(b, lista.getViimeinen());
     }
     
-    @Test
-    public void setEnsimmainenToimii() {
-        lista.setEnsimmainen(new Solmu(new Ruutu(0, 1, 1)));
-        assertEquals("(0, 1)", lista.getEnsimmainen().getRuutu().toString());
-    }
-    
-    @Test
-    public void setViimeinenToimii() {
-        lista.setViimeinen(new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getViimeinen().getRuutu().toString());
-    }
+//    @Test
+//    public void onkoListallaAntaaTrueJosSolmuListalla() {
+//        assertEquals(true, lista.onkoListallaSolmu(a));
+//    }
+//    
+//    @Test
+//    public void onkoListallaAntaaFalseJosSolmuEiOleListalla() {
+//        Solmu c = new Solmu(new Ruutu(3, 3, 3));
+//        assertEquals(false, lista.onkoListallaSolmu(c));
+//    }
+//    
+//    @Test
+//    public void onkoListallaAntaaFalseJosListaTyhja() {
+//        lista = new LinkitettyLista();
+//        Solmu c = new Solmu(new Ruutu(3, 3, 3));
+//        assertEquals(false, lista.onkoListallaSolmu(c));
+//    }
     
     @Test
     public void lisaaSolmunJalkeenToimiiKeskella() {
