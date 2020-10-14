@@ -38,12 +38,12 @@ public class MinimiKeko {
         if (viimeinen == keko.length) {
             kasvata();
         }
-        
-        while (viimeinen > 1 && keko[vanhempi(viimeinen)].compareTo(r) == 1) {  //jos vanhempi on suurempi
-            keko[viimeinen] = keko[vanhempi(viimeinen)];                        //vaihdetaan ruutujen paikkaa
-            viimeinen = vanhempi(viimeinen);
+        int i = viimeinen;
+        while (i > 1 && keko[vanhempi(i)].compareTo(r) == 1) {     //jos viimeisen ruudun vanhempi on suurempi
+            keko[i] = keko[vanhempi(i)];                   //vaihdetaan ruutujen paikkaa
+            i = vanhempi(i);
         }
-        keko[viimeinen] = r;
+        keko[i] = r;
     }
     
     // sama kuin Lista-luokassa
@@ -59,7 +59,7 @@ public class MinimiKeko {
     public Ruutu poistaPienin() {
         Ruutu r = keko[1];              //poimitaan pienin keon juuresta
         keko[1] = keko[viimeinen];      //siirretään keon viimeinen juureen
-        keko[viimeinen] = null;         //poistetaan ruutu viimeisen paikalta
+        keko[viimeinen] = null;
         viimeinen--;
         varmistaKekoehto(1);
         return r;
@@ -77,16 +77,10 @@ public class MinimiKeko {
             }
             if (keko[indeksi].compareTo(keko[pienin]) == 1) {
                 vaihdaRuutujenPaikkaa(indeksi, pienin);
-//                Ruutu apu = keko[indeksi];
-//                keko[indeksi] = keko[pienin];
-//                keko[pienin] = apu;
                 varmistaKekoehto(pienin);
             }
         } else if (vasen == viimeinen && keko[indeksi].compareTo(keko[vasen]) == 1) {
             vaihdaRuutujenPaikkaa(indeksi, vasen);
-//            Ruutu apu = keko[indeksi];
-//            keko[indeksi] = keko[vasen];
-//            keko[pienin] = apu;
         }
     }
     

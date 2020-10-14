@@ -11,26 +11,26 @@ import tiralabra.reitinhaku.verkko.Ruutu;
  *
  * @author mlkul
  */
-public class Lista {
+public class Lista<T> {
     
-    private Ruutu[] lista;
+    private T[] lista;
     private int indeksi;
     
     public Lista() {
-        this.lista = new Ruutu[50];
+        this.lista = (T[]) new Object[50];
         this.indeksi = 0;
     }
     
-    public void lisaa(Ruutu r) {
+    public void lisaa(T arvo) {
         if (indeksi == lista.length) {
             kasvata();
         } 
-        lista[indeksi++] = r;
+        lista[indeksi++] = arvo;
     }
     
     public void kasvata() {
         int uusiKoko = lista.length * 2;  
-        Ruutu[] kopio = new Ruutu[uusiKoko];  
+        T[] kopio = (T[]) new Object[uusiKoko];  
         for(int i = 0; i < lista.length; i++) {
             kopio[i] = lista[i];
         }
@@ -41,7 +41,7 @@ public class Lista {
         int alku = 0;
         int loppu = indeksi - 1;
         while (alku < loppu) {
-            Ruutu apu = lista[alku];
+            T apu = lista[alku];
             lista[alku] = lista[loppu];
             lista[loppu] = apu;
             alku++;
@@ -49,15 +49,20 @@ public class Lista {
         }
     }
     
-    public int haeListanKoko() {
+    public boolean onTyhja() {
+        return indeksi == 0;
+    }
+    
+    public int koko() {
         return indeksi;
     }
     
+   
     public int haeTaulukonKoko() {
         return lista.length;
     }
     
-    public Ruutu haeIndeksista(int i) {
+    public T hae(int i) {
         return lista[i];
     }
 }

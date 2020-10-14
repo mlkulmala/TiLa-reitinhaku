@@ -33,24 +33,7 @@ public class LinkitettyLista {
     public Solmu getViimeinen() {
         return this.viimeinen;
     }
-    
-    //lisää ensimmäinen solmu -> korjaa
-//    public void setEnsimmainenSolmu(Solmu solmu) {
-//        this.ensimmainen = solmu;
-//        this.viimeinen = solmu;
-//    }
-    
-//    public boolean onkoListallaSolmu(Solmu solmu) {
-//        Solmu s = this.ensimmainen;
-//        while (s != null) {
-//            if (s == solmu) {
-//                return true;
-//            } else {
-//                s = s.getSeuraava();
-//            }
-//        }
-//        return false;
-//    }
+
     
     public boolean onkoListallaSolmu(int x, int y) {
         Solmu s = this.ensimmainen;
@@ -122,7 +105,7 @@ public class LinkitettyLista {
         }
     }
     
-    public void poistaSolmuKoordinaateilla(int x, int y) {
+    public void poistaSolmuJosOnListalla(int x, int y) {
         Solmu s = this.ensimmainen;
         while (s != null) {
             if (s.getRuutu().getX() == x && s.getRuutu().getY() == y) {
