@@ -50,7 +50,7 @@ public class MinimiKeko {
     public void kasvata() {
         int uusiKoko = keko.length * 2;  
         Ruutu[] kopio = new Ruutu[uusiKoko];  
-        for(int i = 0; i < keko.length; i++) {
+        for (int i = 0; i < keko.length; i++) {
             kopio[i] = keko[i];
         }
         keko = kopio;    

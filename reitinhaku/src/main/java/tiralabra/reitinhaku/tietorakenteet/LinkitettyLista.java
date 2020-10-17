@@ -1,12 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package tiralabra.reitinhaku.verkko;
+
+package tiralabra.reitinhaku.tietorakenteet;
+
+import tiralabra.reitinhaku.verkko.Solmu;
 
 /**
- *
+ * Kahteen suuntaan linkitetty lista, joka pitää sisällään Solmu-olioita. 
+ * Kullakin solmulla on tieto edellisestä ja seuraavasta solmusta.
+ * 
  * @author mlkul
  */
 public class LinkitettyLista {
@@ -14,6 +14,12 @@ public class LinkitettyLista {
     private Solmu ensimmainen;
     private Solmu viimeinen;
     
+    /**
+     * Konstruktori, joka luo listan, kun sen kaksi ensimmäistä solmua annetaan
+     * parametrina.
+     * @param ensimmainen
+     * @param viimeinen 
+     */
     public LinkitettyLista(Solmu ensimmainen, Solmu viimeinen) {
         this.ensimmainen = ensimmainen;
         this.viimeinen = viimeinen;
@@ -21,6 +27,9 @@ public class LinkitettyLista {
         this.viimeinen.setEdellinen(ensimmainen);
     }
     
+    /**
+     * Konstruktori, joka luo tyhjän listan.
+     */
     public LinkitettyLista() {
         this.ensimmainen = null;
         this.viimeinen = null;
@@ -34,6 +43,11 @@ public class LinkitettyLista {
         return this.viimeinen;
     }
 
+    /**
+     * Tarkistaa, onko listalla solmu, jolla on parametrina annetut koordinaatit.
+     * @param x
+     * @param y
+     */
     
     public boolean onkoListallaSolmu(int x, int y) {
         Solmu s = this.ensimmainen;
@@ -47,6 +61,11 @@ public class LinkitettyLista {
         return false;
     }
     
+    /**
+     * Lisää solmun jonkin tietyn solmun jälkeen.
+     * @param solmu Solmu, jonka perään lisätään.
+     * @param uusiSolmu Lisättävä solmu.
+     */
     public void lisaaSolmunJalkeen(Solmu solmu, Solmu uusiSolmu) {
         uusiSolmu.setEdellinen(solmu);
         if (solmu.getSeuraava() == null) {
@@ -58,6 +77,11 @@ public class LinkitettyLista {
         solmu.setSeuraava(uusiSolmu);
     }
     
+    /**
+     * Lisää solmun tiettyä solmua.
+     * @param solmu Solmu, jonka edelle lisätään.
+     * @param uusiSolmu LIsättävä solmu.
+     */
     public void lisaaEnnenSolmua(Solmu solmu, Solmu uusiSolmu) {
         uusiSolmu.setSeuraava(solmu);
         if (solmu.getEdellinen() == null) {
@@ -69,6 +93,10 @@ public class LinkitettyLista {
         solmu.setEdellinen(uusiSolmu);
     }
     
+    /**
+     * Lisää solmun listan loppuun.
+     * @param solmu 
+     */
     public void lisaaLoppuun(Solmu solmu) {
         if (this.viimeinen != null) {
             this.viimeinen.setSeuraava(solmu);
@@ -80,6 +108,10 @@ public class LinkitettyLista {
         this.viimeinen = solmu;
     }
     
+    /**
+     * Lisää solmun listan alkuun.
+     * @param solmu 
+     */
     public void lisaaAlkuun(Solmu solmu) {
         if (this.ensimmainen != null) {
             this.ensimmainen.setEdellinen(solmu);
@@ -92,6 +124,10 @@ public class LinkitettyLista {
         
     }
     
+    /**
+     * Poistaa parametrina annetun solmun listalta.
+     * @param solmu 
+     */
     public void poistaSolmu(Solmu solmu) {
         if (solmu.getEdellinen() == null) {
             this.ensimmainen = solmu.getSeuraava();
@@ -105,6 +141,12 @@ public class LinkitettyLista {
         }
     }
     
+    /**
+     * Tarkistaa, onko listalla solmua, jolla on parametrina annetut koordinaatit,
+     * ja poistaa sen, jos sellainen löytyy.
+     * @param x
+     * @param y 
+     */
     public void poistaSolmuJosOnListalla(int x, int y) {
         Solmu s = this.ensimmainen;
         while (s != null) {
@@ -115,12 +157,15 @@ public class LinkitettyLista {
         }
     }
     
+    /**
+     * Poistaa solmun listan alusta.
+     */
     public void poistaAlusta() {
         if (this.ensimmainen != null) {  //true
-            Solmu poistettava = this.ensimmainen;  //(0,0)
-            if (poistettava.getSeuraava() != null) {  // true, getSEuraava = (1, 0)
+            Solmu poistettava = this.ensimmainen;  
+            if (poistettava.getSeuraava() != null) {  
                 this.ensimmainen = poistettava.getSeuraava();
-                this.ensimmainen.setEdellinen(null);//this.ensimmainen = (1, 0)
+                this.ensimmainen.setEdellinen(null);  
             } else {
                 this.ensimmainen = null;
                 this.viimeinen = null;
@@ -132,6 +177,9 @@ public class LinkitettyLista {
         
     }
     
+    /**
+     * Poistaa solmun listan lopusta.
+     */
     public void poistaLopusta() {
         if (this.viimeinen != null) { //true
             Solmu poistettava = this.viimeinen;  // = (1, 0)
@@ -145,10 +193,12 @@ public class LinkitettyLista {
             poistettava.setEdellinen(null);
             poistettava.setSeuraava(null);
         }
-        
-        
     }
     
+    /**
+     * Tarkistaa, onko lista tyhjä. 
+     * @return Palauttaa true, jos listalla ei ole alkioita.
+     */
     public boolean onTyhja() {
         if (this.ensimmainen == null && this.viimeinen == null) {
             return true;
@@ -156,6 +206,10 @@ public class LinkitettyLista {
             return false;
         }
     }
+    
+    /**
+     * Tulostaa listan solmut (luotu omia tarkistuksia varten).
+     */
     public void tulostaListanSolmut() {
         Solmu s = this.ensimmainen;
         while (s != null) {

@@ -1,12 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package tiralabra.reitinhaku.verkko;
 
 /**
- *
+ * Kartan ruutuja kuvaava luokka. Sisältää ruudun koordinaatit sekä tiedon 
+ * etäisyydestä lähtösolmuun kuljettua reittiä pitkin.
  * @author mlkul
  */
 public class Ruutu implements Comparable<Ruutu> {
@@ -32,6 +29,11 @@ public class Ruutu implements Comparable<Ruutu> {
         return this.etaisyys;
     }
     
+    /**
+     * Ruudut voidaan laittaa järjestykseen etäisyyden mukaan. Tässä käytetty 
+     * Javan valmista metodia.
+     * @param s
+     */
     @Override
     public int compareTo(Ruutu s) {
         if (this.etaisyys - s.etaisyys > 0) {
@@ -42,6 +44,7 @@ public class Ruutu implements Comparable<Ruutu> {
             return 0;
         }
     }
+    
     
     @Override
     public String toString() {
