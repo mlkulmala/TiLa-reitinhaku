@@ -47,7 +47,11 @@ public class Kartta {
      * @param arvo 0 tai 1
      */
     public void lisaaKarttaan(int x, int y, int arvo) {
-        ruudukko[y][x] = arvo;
+        if (arvo == 0 || arvo == 1) {
+            ruudukko[y][x] = arvo;
+        } else {
+            return;
+        }
     }
     
     /**
@@ -63,7 +67,7 @@ public class Kartta {
     
     /**
      * Laskee pisteiden välisen euklidisen etäisyyden. Apuväline, joka ei
-     * loogisesti kuulu tähän luokkaan.
+     * loogisesti kuuluisi tähän luokkaan.
      * @param ax
      * @param ay
      * @param bx
@@ -91,16 +95,18 @@ public class Kartta {
     
     /**
      * Tarkistaa onko siirtymä (naapuriruutuun) diagonaalinen.
-     * @param i 
-     * @return 
+     * @param i Indeksi i viittaa suunnat-taulukon arvoihin. Suunnat ilmaisevat 
+     * oikeaa lisäystä ruudun koordinaatteihin eri ilmansuunnissa sijaitseviin 
+     * naapuriruutuihin siirryttäessä.
      */
     public boolean kuljetaanDiagonaalisesti(int i) {
         return (!(suunnat[i][0] == 0 || suunnat[i][1] == 0)); 
     }
     
     /**
-     * Palauttaa ruutujen välisen etäisyyden
-     * @param i
+     * Palauttaa ruutujen välisen etäisyyden. Parametrina annettava i viittaa
+     * suunnat-taulukon arvoihin.
+     * @param i 
      * @return 
      */
     public double ruutujenValinenEtaisyys(int i) {

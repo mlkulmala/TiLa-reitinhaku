@@ -3,11 +3,9 @@ package tiralabra.reitinhaku.algoritmit;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import tiralabra.reitinhaku.tietorakenteet.LinkitettyLista;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 import tiralabra.reitinhaku.verkko.Kartta;
 import tiralabra.reitinhaku.verkko.Ruutu;
-import tiralabra.reitinhaku.verkko.Solmu;
 /**
  *
  * @author mlkul

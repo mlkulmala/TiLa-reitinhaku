@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package tiralabra.reitinhaku.verkko;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -18,28 +10,34 @@ import static org.junit.Assert.*;
  */
 public class RuutuTest {
     
-    public RuutuTest() {
+    Ruutu ruutu;
+    
+    @Test
+    public void kontruktoriToimiiOikein() {
+        ruutu = new Ruutu(1, 2, 3);
+        assertEquals(1, ruutu.getX());
+        assertEquals(2, ruutu.getY());
     }
     
-    @BeforeClass
-    public static void setUpClass() {
+    @Test
+    public void ruutujenVertailuToimiiPienemmanKanssa() {
+        ruutu = new Ruutu(1, 2, 3);
+        Ruutu vertailukohde = new Ruutu(1, 1, 1);
+        assertEquals(1, ruutu.compareTo(vertailukohde));
     }
     
-    @AfterClass
-    public static void tearDownClass() {
+    @Test
+    public void ruutujenVertailuToimiiSuuremmanKanssa() {
+        ruutu = new Ruutu(1, 2, 3);
+        Ruutu vertailukohde = new Ruutu(5, 4, 5);
+        assertEquals(-1, ruutu.compareTo(vertailukohde));
     }
     
-    @Before
-    public void setUp() {
+    @Test
+    public void ruutujenVertailuToimiiYhtaSuurenKanssa() {
+        ruutu = new Ruutu(1, 2, 3);
+        Ruutu vertailukohde = new Ruutu(2, 1, 3);
+        assertEquals(0, ruutu.compareTo(vertailukohde));
     }
     
-    @After
-    public void tearDown() {
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    // @Test
-    // public void hello() {}
 }

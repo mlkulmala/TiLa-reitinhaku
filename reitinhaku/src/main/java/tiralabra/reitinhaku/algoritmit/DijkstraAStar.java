@@ -3,7 +3,6 @@ package tiralabra.reitinhaku.algoritmit;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import tiralabra.reitinhaku.tietorakenteet.LinkitettyLista;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 import tiralabra.reitinhaku.tietorakenteet.MinimiKeko;
 import tiralabra.reitinhaku.verkko.Kartta;
