@@ -14,18 +14,6 @@ public class LinkitettyLista {
     private Solmu ensimmainen;
     private Solmu viimeinen;
     
-    /**
-     * Konstruktori, joka luo listan, kun sen kaksi ensimmäistä solmua annetaan
-     * parametrina.
-     * @param ensimmainen
-     * @param viimeinen 
-     */
-    public LinkitettyLista(Solmu ensimmainen, Solmu viimeinen) {
-        this.ensimmainen = ensimmainen;
-        this.viimeinen = viimeinen;
-        this.ensimmainen.setSeuraava(viimeinen);
-        this.viimeinen.setEdellinen(ensimmainen);
-    }
     
     /**
      * Konstruktori, joka luo tyhjän listan.
@@ -35,6 +23,11 @@ public class LinkitettyLista {
         this.viimeinen = null;
     }
     
+//    public LinkitettyLista(Solmu solmu) {
+//        this.ensimmainen = solmu;
+//        this.viimeinen = solmu;
+//    }
+    
     public Solmu getEnsimmainen() {
         return this.ensimmainen;
     }
@@ -42,24 +35,7 @@ public class LinkitettyLista {
     public Solmu getViimeinen() {
         return this.viimeinen;
     }
-
-    /**
-     * Tarkistaa, onko listalla solmu, jolla on parametrina annetut koordinaatit.
-     * @param x
-     * @param y
-     */
     
-    public boolean onkoListallaSolmu(int x, int y) {
-        Solmu s = this.ensimmainen;
-        while (s != null) {
-            if (s.getRuutu().getX() == x && s.getRuutu().getY() == y) {
-                return true;
-            } else {
-                s = s.getSeuraava();
-            }
-        }
-        return false;
-    }
     
     /**
      * Lisää solmun jonkin tietyn solmun jälkeen.
@@ -141,21 +117,7 @@ public class LinkitettyLista {
         }
     }
     
-    /**
-     * Tarkistaa, onko listalla solmua, jolla on parametrina annetut koordinaatit,
-     * ja poistaa sen, jos sellainen löytyy.
-     * @param x
-     * @param y 
-     */
-    public void poistaSolmuJosOnListalla(int x, int y) {
-        Solmu s = this.ensimmainen;
-        while (s != null) {
-            if (s.getRuutu().getX() == x && s.getRuutu().getY() == y) {
-                poistaSolmu(s);
-            } 
-            s = s.getSeuraava();
-        }
-    }
+  
     
     /**
      * Poistaa solmun listan alusta.
@@ -210,11 +172,11 @@ public class LinkitettyLista {
     /**
      * Tulostaa listan solmut (luotu omia tarkistuksia varten).
      */
-    public void tulostaListanSolmut() {
-        Solmu s = this.ensimmainen;
-        while (s != null) {
-            System.out.print(s.getRuutu().toString() + ", ");
-            s = s.getSeuraava();
-        }
-    }
+//    public void tulostaListanSolmut() {
+//        Solmu s = this.ensimmainen;
+//        while (s != null) {
+//            System.out.print(s.getRuutu().toString() + ", ");
+//            s = s.getSeuraava();
+//        }
+//    }
 }

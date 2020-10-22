@@ -1,6 +1,7 @@
 
 package tiralabra.reitinhaku.verkko;
 
+import javafx.scene.paint.Color;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 
 /**
@@ -162,6 +163,7 @@ public class Kartta {
     public double haeReitinPituus() {
         return reitinPituus;
     }
+    
     
     
 

@@ -1,18 +1,9 @@
 package tiralabra.reitinhaku.tietorakenteet;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import tiralabra.reitinhaku.tietorakenteet.LinkitettyLista;
 import tiralabra.reitinhaku.verkko.Ruutu;
 import tiralabra.reitinhaku.verkko.Solmu;
 
@@ -23,32 +14,26 @@ import tiralabra.reitinhaku.verkko.Solmu;
 public class LinkitettyListaTest {
     
     LinkitettyLista lista;
-    Solmu a, b;
+    Solmu a, b, c;
     
     @Before
     public void setUp() {
         a = new Solmu(new Ruutu(0, 0, 0));
-        b = new Solmu(new Ruutu(1, 0, 1));
-        lista = new LinkitettyLista(a, b);
+        b = new Solmu(new Ruutu(1, 2, 3));
+        c = new Solmu(new Ruutu(3, 3, 1));
+        lista = new LinkitettyLista();
     }
     
     @Test
-    public void getEnsimmainenToimii() {
-        lista = new LinkitettyLista();
+    public void getEnsimmainenAntaaNullKunListaTyhja() {
         assertEquals(null, lista.getEnsimmainen());
     }
     
     @Test
-    public void getViimeinenToimii() {
-        lista = new LinkitettyLista();
+    public void getViimeinenAntaaNullKunListaTyhja() {
         assertEquals(null, lista.getViimeinen());
     }
     
-    @Test
-    public void konstruktoriParametreillaToimii() {
-        assertEquals(a, lista.getEnsimmainen());
-        assertEquals(b, lista.getViimeinen());
-    }
     
 //    @Test
 //    public void onkoListallaAntaaTrueJosSolmuListalla() {
@@ -69,109 +54,110 @@ public class LinkitettyListaTest {
 //    }
     
     @Test
-    public void lisaaSolmunJalkeenToimiiKeskella() {
-        lista.lisaaSolmunJalkeen(a, new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getEnsimmainen().getSeuraava().getRuutu().toString());
+    public void lisaaSolmunJalkeenToimii() {
+        lista.lisaaAlkuun(a);
+        lista.lisaaSolmunJalkeen(a, b);
+        lista.lisaaSolmunJalkeen(a, c);
+        assertEquals("(3, 3)", lista.getEnsimmainen().getSeuraava().getRuutu().toString());
+        assertEquals("(1, 2)", lista.getViimeinen().getRuutu().toString());
     }
    
+    
     @Test
-    public void lisaaSolmunJalkeenToimiiLopussa() {
-        lista.lisaaSolmunJalkeen(b, new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getViimeinen().getRuutu().toString());
+    public void lisaaEnnenSolmuaToimii() {
+        lista.lisaaAlkuun(a);
+        lista.lisaaEnnenSolmua(a, b);
+        lista.lisaaEnnenSolmua(b, c);
+        assertEquals("(1, 2)", lista.getEnsimmainen().getSeuraava().getRuutu().toString());
+        assertEquals("(3, 3)", lista.getEnsimmainen().getRuutu().toString());
+    }
+    
+    
+    @Test
+    public void lisaaAlkuunToimiiKunListaTyhja() {
+        lista.lisaaAlkuun(b);
+        assertEquals(b, lista.getEnsimmainen());
+        assertEquals(b, lista.getViimeinen());
     }
     
     @Test
-    public void lisaaEnnenSolmuaToimiiKeskella() {
-        lista.lisaaEnnenSolmua(b, new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getEnsimmainen().getSeuraava().getRuutu().toString());
+    public void lisaaAlkuunToimiiKunListallaAlkioita() {
+        lista.lisaaAlkuun(a);
+        lista.lisaaLoppuun(b);
+        lista.lisaaAlkuun(c);
+        assertEquals(c, lista.getEnsimmainen());
+    }
+    
+    
+    @Test
+    public void lisaaLoppuunToimiiKunListaTyhja() {
+        lista.lisaaLoppuun(c);
+        assertEquals(c, lista.getViimeinen());
+        assertEquals(c, lista.getEnsimmainen());
     }
     
     @Test
-    public void lisaaEnnenSolmuaToimiiAlussa() {
-        lista.lisaaEnnenSolmua(a, new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getEnsimmainen().getRuutu().toString());
-    }
-    
-    @Test
-    public void lisaaAlkuunToimii() {
-        lista.lisaaAlkuun(new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getEnsimmainen().getRuutu().toString());
-    }
-    
-    @Test
-    public void lisaaTyhjanListanAlkuunToimii() {
-        lista = new LinkitettyLista();
-        lista.lisaaAlkuun(new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getEnsimmainen().getRuutu().toString());
-        assertEquals("(0, 2)", lista.getViimeinen().getRuutu().toString());
-    }
-    
-    @Test
-    public void lisaaLoppuunToimii() {
-        lista.lisaaLoppuun(new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getViimeinen().getRuutu().toString());
-    }
-    
-    @Test
-    public void lisaaTyhjanListanLoppuunToimii() {
-        lista = new LinkitettyLista();
-        lista.lisaaLoppuun(new Solmu(new Ruutu(0, 2, 2)));
-        assertEquals("(0, 2)", lista.getEnsimmainen().getRuutu().toString());
-        assertEquals("(0, 2)", lista.getViimeinen().getRuutu().toString());
+    public void lisaaLoppuunToimiiKunListallaAlkioita() {
+        lista.lisaaLoppuun(a);
+        lista.lisaaAlkuun(b);
+        lista.lisaaLoppuun(c);
+        assertEquals(c, lista.getViimeinen());
     }
     
     @Test
     public void poistaSolmuToimiiListanLopussa() {
-        Solmu c = new Solmu(new Ruutu(3, 3, 3));
+        lista.lisaaAlkuun(a);
+        lista.lisaaLoppuun(b);
         lista.lisaaLoppuun(c);
         lista.poistaSolmu(c);
-        assertEquals("(1, 0)", lista.getViimeinen().getRuutu().toString());
+        assertEquals(b, lista.getViimeinen());
     }
     
     @Test
     public void poistaSolmuToimiiListanAlussa() {
-        Solmu c = new Solmu(new Ruutu(3, 3, 3));
+        lista.lisaaLoppuun(a);
+        lista.lisaaLoppuun(b);
         lista.lisaaAlkuun(c);
         lista.poistaSolmu(c);
-        assertEquals("(0, 0)", lista.getEnsimmainen().getRuutu().toString());
+        assertEquals(a, lista.getEnsimmainen());
     }
-    
+     
     @Test
     public void poistaAlustaToimii() {
         lista.poistaAlusta();
-        assertEquals("(1, 0)", lista.getEnsimmainen().getRuutu().toString());
+        assertEquals(null, lista.getEnsimmainen());
+        assertEquals(null, lista.getViimeinen());
     }
     
     @Test
     public void poistaLopustaToimii() {
         lista.poistaLopusta();
-        assertEquals("(0, 0)", lista.getViimeinen().getRuutu().toString());
+        assertEquals(null, lista.getEnsimmainen());
+        assertEquals(null, lista.getViimeinen());
     }
     
     @Test
     public void onTyhjaAntaaFalseKunListallaSolmuja() {
-        lista.poistaAlusta();
+        lista.lisaaAlkuun(a);
         assertEquals(false, lista.onTyhja());
     }
     
     @Test
     public void onTyhjaAntaaTrueKunListaTyhja() {
-        lista = new LinkitettyLista();
         assertEquals(true, lista.onTyhja());
     }
     
     @Test
     public void onTyhjaAntaaTrueKunListaTyhjennetty() {
+        lista.lisaaLoppuun(a);
         lista.poistaAlusta();
-        lista.poistaLopusta();
         assertEquals(true, lista.onTyhja());
     }
     
     @Test
     public void poistaAlustaTyhjentaaListan() {
-        Solmu c = new Solmu(new Ruutu(3, 3, 3));
+        lista.lisaaLoppuun(a);
         lista.lisaaLoppuun(c);
-        lista.poistaAlusta();
         lista.poistaAlusta();
         lista.poistaAlusta();
         assertEquals(true, lista.onTyhja());
@@ -179,17 +165,15 @@ public class LinkitettyListaTest {
     
     @Test
     public void poistaLopustaTyhjentaaListan() {
-        Solmu c = new Solmu(new Ruutu(3, 3, 3));
-        lista.lisaaLoppuun(c);
-        lista.poistaLopusta();
+        lista.lisaaAlkuun(c);
+        lista.lisaaAlkuun(b);
         lista.poistaLopusta();
         lista.poistaLopusta();
         assertEquals(true, lista.onTyhja());
     }
     
     @Test
-    public void poistoTyhjastaListastaEiOnnistu() {
-        lista = new LinkitettyLista();
+    public void poistoTyhjastaListastaEiTeeMitaan() {
         lista.poistaAlusta();
         assertEquals(null, lista.getEnsimmainen());
         assertEquals(true, lista.onTyhja());

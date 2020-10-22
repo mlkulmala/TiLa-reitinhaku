@@ -1,26 +1,31 @@
-
 package tiralabra.reitinhaku.algoritmit;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import tiralabra.reitinhaku.tietorakenteet.LinkitettyLista;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 import tiralabra.reitinhaku.verkko.Kartta;
 import tiralabra.reitinhaku.verkko.Ruutu;
+import tiralabra.reitinhaku.verkko.Solmu;
+
 /**
  *
  * @author mlkul
  */
-public class FringeListoina {
+public class FringeTaulukkona {
     
     Kartta kartta;
     int inf;
+    int[][] indeksiListalla;
     int[][] suunnat;
     double[][] etaisyys;
     Ruutu[][] mista;
     double fLimit, fMin;
-    Lista<Ruutu> eka, toka;
+    //LinkitettyLista lista;
+    //Ruutu[][] ruudut;
+    Lista<Ruutu> fLista;
 
-    public FringeListoina(Kartta kartta) {
+    public FringeTaulukkona(Kartta kartta) {
         this.kartta = kartta;
     }
 
@@ -29,41 +34,48 @@ public class FringeListoina {
         int korkeus = kartta.getKorkeus();
         int leveys = kartta.getLeveys();
         etaisyys = new double[korkeus + 1][leveys + 1];
+        indeksiListalla = new int[korkeus + 1][leveys + 1];
         inf = 999999999;
         for (int i = 0; i < etaisyys.length; i++) {
             for (int j = 0; j < etaisyys[0].length; j++) {
                 etaisyys[i][j] = inf;
+                indeksiListalla[i][j] = inf;
             }
         }
         mista = new Ruutu[korkeus + 1][leveys + 1];
+        
         suunnat = new int[][]{{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
-        eka = new Lista<>();
-        toka = new Lista<>();
+        //lista = new LinkitettyLista();
+        fLista = new Lista<>();
+        //ruudut = new Ruutu[korkeus + 1][leveys + 1];
     }    
     
-    // Fringe Search
+    // Fringe Search taulukon avulla
     public void haeReitti(Lista<Integer> koordinaatit, GraphicsContext cg) {
         int ax = koordinaatit.hae(0);
         int ay = koordinaatit.hae(1);
         int bx = koordinaatit.hae(2);
         int by = koordinaatit.hae(3);
-        int indeksi = eka.koko();
-        eka.lisaa(new Ruutu(ax, ay, 0)); 
+        //ruudut[ay][ax] = new Ruutu(ax, ay, 0); 
+        int indeksi = 0;
+        fLista.lisaa(new Ruutu(ax, ay, 0));
+        indeksiListalla[ay][ax] = indeksi;
         etaisyys[ay][ax] = 0; 
         mista[ay][ax] = null;
         fLimit = kartta.euklidinenEtaisyys(ax, ay, bx, by); 
         boolean loydetty = false; 
-        int laskuri = 0;
         
-        while (!loydetty && !eka.onTyhja()) {  
+        while (!loydetty && fLista.koko() != 0) {  
             fMin = inf; 
-            for (int i = 0; i < eka.koko(); i++) {  
-                Ruutu ruutu = eka.hae(i);
+            for (int i = 0; i < fLista.koko(); i++) { 
+                Ruutu ruutu = fLista.hae(i);
+                //System.out.println("käsittelyssä " + ruutu.toString());
+                int ruudunIndeksi = indeksi;
                 int nx = ruutu.getX();
                 int ny = ruutu.getY();
-                cg.setFill(Color.CYAN);
+                cg.setFill(Color.CYAN);  //kartta.varitaRuutu(x, y);
                 cg.fillRect(nx, ny, 1, 1);
-                System.out.println("Käsittelyssä solmu (" + nx + "," + ny + ")");
+                
                 double f = etaisyys[ny][nx] + kartta.euklidinenEtaisyys(nx, ny, bx, by);
                 if (f > fLimit) {
                     fMin = f < fMin ? f : fMin;
@@ -76,38 +88,33 @@ public class FringeListoina {
                 for (int j = 0; j < 8; j++) { 
                     int uy = ny + suunnat[j][0];
                     int ux = nx + suunnat[j][1];
-                    System.out.println("ux " + ux + ", uy " + uy);
                     if (kartta.ruutuOnKuljettavissa(ux, uy)) {
-                        double uusiAskel = kartta.ruutujenValinenEtaisyys(j);           
+                        double uusiAskel = kartta.ruutujenValinenEtaisyys(j);  
                         double uusiEtaisyys = etaisyys[ny][nx] + uusiAskel; 
                         double nykyinenEtaisyys = etaisyys[uy][ux]; 
-                        if (etaisyys[uy][ux] != inf && uusiEtaisyys > nykyinenEtaisyys) {
-                            continue;
+                        if (mista[uy][ux] != null) {
+                            if (uusiEtaisyys > nykyinenEtaisyys) {
+                                continue;
+                            }
                         }
                         etaisyys[uy][ux] = uusiEtaisyys;
                         mista[uy][ux] = ruutu;
-//                        if (onkoListalla(ux, uy)) {
-//                            poistaListalta(ux, uy);
-//                        }
-                        toka.lisaa(new Ruutu(ux, uy, uusiEtaisyys));
+                        if (indeksiListalla[uy][ux] != inf) {    //jos on jo indeksi, ruutu löytyy jo listalta
+                            fLista.poista(indeksiListalla[uy][ux]);  //poistetaan ko. indeksin kohdalta
+                            indeksi--;
+                        }
+                        //ruudut[uy][ux] = new Ruutu(ux, uy, uusiEtaisyys);
+                        fLista.lisaa(new Ruutu(ux, uy, uusiEtaisyys));
+                        indeksiListalla[uy][ux] = ++indeksi;
                     } 
                 }
-                System.out.println("poistetaan " + eka.hae(i).toString());
-                eka.poista(i);
-                for (int k = 0; k < toka.koko(); k++) {
-                    eka.lisaa(toka.hae(k));
-                }
-                toka = new Lista<>();
+                fLista.poista(ruudunIndeksi);
+                indeksiListalla[ny][nx] = inf;
             }
             fLimit = fMin;
-            System.out.println("fLimin = fMin");
         }
         if (loydetty) {
-            //System.out.println("käsiteltiin yhteensä " + laskuri + " solmua");
             kartta.muodostaReitti(ax, ay, bx, by, mista);
         }
     }
-    
-   
-    
 }

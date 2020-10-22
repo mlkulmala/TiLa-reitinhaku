@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import tiralabra.reitinhaku.algoritmit.DijkstraAStar;
 import tiralabra.reitinhaku.algoritmit.FringeListoina;
 import tiralabra.reitinhaku.algoritmit.FringeSearch;
+import tiralabra.reitinhaku.algoritmit.FringeTaulukkona;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 
 import tiralabra.reitinhaku.verkko.Kartta;
@@ -253,16 +254,16 @@ public class UI extends Application {
                     da.alustaHaku();
                     da.haeReitti(koordinaatit, 2, piirtoalusta);
                 } else {
-                    FringeSearch fringe = new FringeSearch(kartta);
-                    fringe.alustaHaku();
-                    fringe.haeReitti(koordinaatit, piirtoalusta);   
-//                    FringeListoina fringe = new FringeListoina(kartta);
+//                    FringeSearch fringe = new FringeSearch(kartta);
 //                    fringe.alustaHaku();
-//                    fringe.haeReitti(koordinaatit, piirtoalusta);
+//                    fringe.haeReitti(koordinaatit, piirtoalusta);   
+                    FringeTaulukkona fringe = new FringeTaulukkona(kartta); 
+                    fringe.alustaHaku();
+                    fringe.haeReitti(koordinaatit, piirtoalusta);
                 }
                 long loppu = System.nanoTime();
                 double kesto = 1.0 * (loppu - alku) / 1000000;
-                testitulos.setText("Aikaa kului: " + kesto);
+                testitulos.setText("Aikaa kului: " + kesto + " ms");
                 if (kartta.haeLyhinReitti().onTyhja()) {
                     virheilmoitus.setText("Valitsemiesi pisteiden välillä ei ole reittiä.");
                 } else {

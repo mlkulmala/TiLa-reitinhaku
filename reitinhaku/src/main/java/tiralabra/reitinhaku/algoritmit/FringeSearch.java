@@ -23,7 +23,7 @@ public class FringeSearch {
     Ruutu[][] mista;
     double fLimit, fMin;
     LinkitettyLista lista;
-    Solmu[][] jarjestys;
+    Solmu[][] solmut;
 
     public FringeSearch(Kartta kartta) {
         this.kartta = kartta;
@@ -44,7 +44,7 @@ public class FringeSearch {
         listalla = new boolean[korkeus + 1][leveys + 1];
         suunnat = new int[][]{{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
         lista = new LinkitettyLista();
-        jarjestys = new Solmu[korkeus + 1][leveys + 1];
+        solmut = new Solmu[korkeus + 1][leveys + 1];
     }    
     
     // Fringe Search
@@ -53,26 +53,24 @@ public class FringeSearch {
         int ay = koordinaatit.hae(1);
         int bx = koordinaatit.hae(2);
         int by = koordinaatit.hae(3);
-        lista.lisaaLoppuun(new Solmu(new Ruutu(ax, ay, 0)));  
+        solmut[ay][ax] = (new Solmu(new Ruutu(ax, ay, 0))); 
+        lista.lisaaLoppuun(solmut[ay][ax]);  
         etaisyys[ay][ax] = 0; 
         mista[ay][ax] = null;
+        listalla[ay][ax] = true;
         fLimit = kartta.euklidinenEtaisyys(ax, ay, bx, by); 
         boolean loydetty = false; 
-        int laskuri = 0;
         
         while (!loydetty && !lista.onTyhja()) {  
             fMin = inf; 
             for (Solmu s = lista.getEnsimmainen(); s != null; s = s.getSeuraava()) {  
-                laskuri++;
-                //System.out.println("käsittelyssä solmu " + s.getRuutu().toString());
-                cg.setFill(Color.CYAN);
+                cg.setFill(Color.CYAN);  //kartta.varitaRuutu(x, y);
                 cg.fillRect(s.getRuutu().getX(), s.getRuutu().getY(), 1, 1);
                 int nx = s.getRuutu().getX();
                 int ny = s.getRuutu().getY();
-                System.out.println("Käsittelyssä solmu (" + nx + "," + ny + ")");
                 double f = etaisyys[ny][nx] + kartta.euklidinenEtaisyys(nx, ny, bx, by);
                 if (f > fLimit) {
-                    fMin = Math.min(f, fMin);
+                    fMin = f < fMin ? f : fMin;
                     continue;
                 }
                 if (nx == bx && ny == by) {
@@ -83,52 +81,57 @@ public class FringeSearch {
                     int uy = ny + suunnat[i][0];
                     int ux = nx + suunnat[i][1];
                     if (kartta.ruutuOnKuljettavissa(ux, uy)) {
-                        double uusiAskel = kartta.ruutujenValinenEtaisyys(i);           
+                        double uusiAskel = kartta.ruutujenValinenEtaisyys(i);  
                         double uusiEtaisyys = etaisyys[ny][nx] + uusiAskel; 
                         double nykyinenEtaisyys = etaisyys[uy][ux]; 
-                        if (etaisyys[uy][ux] != inf && uusiEtaisyys > nykyinenEtaisyys) {
-                            continue;
+                        if (mista[uy][ux] != null) {
+                            if (uusiEtaisyys > nykyinenEtaisyys) {
+                                continue;
+                            }
                         }
                         etaisyys[uy][ux] = uusiEtaisyys;
                         mista[uy][ux] = s.getRuutu();
                         if (listalla[uy][ux]) {
-                            lista.poistaSolmuJosOnListalla(ux, uy);
+                            lista.poistaSolmu(solmut[uy][ux]);
                         }
-                        lista.lisaaLoppuun(new Solmu(new Ruutu(ux, uy, uusiEtaisyys)));
+                        solmut[uy][ux] = new Solmu(new Ruutu(ux, uy, uusiEtaisyys));
+                        lista.lisaaLoppuun(solmut[uy][ux]);
                         listalla[uy][ux] = true;
                     } 
                 }
                 lista.poistaSolmu(s);
-                System.out.println(" poistettu solmu (" + s.getRuutu().getX() + "," + s.getRuutu().getY() + ")");
                 listalla[ny][nx] = false;
             }
             fLimit = fMin;
-            System.out.println("fLimin = fMin");
         }
         if (loydetty) {
-            //System.out.println("käsiteltiin yhteensä " + laskuri + " solmua");
             kartta.muodostaReitti(ax, ay, bx, by, mista);
         }
     }
     
-    // Fringe Search
+    
+    
+    
+    
+    
+    // Fringe Search tulostuksineen
     public void haeReitti2(Lista<Integer> koordinaatit, GraphicsContext cg) {
         int ax = koordinaatit.hae(0);
         int ay = koordinaatit.hae(1);
         int bx = koordinaatit.hae(2);
         int by = koordinaatit.hae(3);
-        lista.lisaaLoppuun(new Solmu(new Ruutu(ax, ay, 0))); 
-        jarjestys[ay][ax] = lista.getEnsimmainen();
+        solmut[ay][ax] = (new Solmu(new Ruutu(ax, ay, 0))); 
+        lista.lisaaLoppuun(solmut[ay][ax]); 
         etaisyys[ay][ax] = 0; 
         mista[ay][ax] = null;
         fLimit = kartta.euklidinenEtaisyys(ax, ay, bx, by); 
         boolean loydetty = false; 
-        int laskuri = 0;
+        //int laskuri = 0;
         
         while (!loydetty && !lista.onTyhja()) {  
             fMin = inf; 
             for (Solmu s = lista.getEnsimmainen(); s != null; s = s.getSeuraava()) {  
-                laskuri++;
+                //laskuri++;
                 //System.out.println("käsittelyssä solmu " + s.getRuutu().toString());
                 cg.setFill(Color.CYAN);
                 cg.fillRect(s.getRuutu().getX(), s.getRuutu().getY(), 1, 1);
@@ -151,24 +154,29 @@ public class FringeSearch {
                         double uusiAskel = kartta.ruutujenValinenEtaisyys(i);           
                         double uusiEtaisyys = etaisyys[ny][nx] + uusiAskel; 
                         double nykyinenEtaisyys = etaisyys[uy][ux]; 
-                        if (etaisyys[uy][ux] != inf && uusiEtaisyys > nykyinenEtaisyys) {
-                            continue;
+                        if (mista[uy][ux] != null) {
+                            if (uusiEtaisyys > nykyinenEtaisyys) {
+                                continue;
+                            }
                         }
                         etaisyys[uy][ux] = uusiEtaisyys;
                         mista[uy][ux] = s.getRuutu();
                         if (listalla[uy][ux]) {
-                            lista.poistaSolmuJosOnListalla(ux, uy);
+                            System.out.println(" löytyi sama listalta, poistetaan");
+                            //lista.poistaSolmuJosOnListalla(ux, uy);
+                            lista.poistaSolmu(solmut[uy][ux]);
                         }
-                        lista.lisaaLoppuun(new Solmu(new Ruutu(ux, uy, uusiEtaisyys)));
+                        solmut[uy][ux] = new Solmu(new Ruutu(ux, uy, uusiEtaisyys));
+                        lista.lisaaLoppuun(solmut[uy][ux]);
                         listalla[uy][ux] = true;
                     } 
                 }
                 lista.poistaSolmu(s);
-                System.out.println(" poistettu solmu (" + s.getRuutu().getX() + "," + s.getRuutu().getY() + ")");
+                //System.out.println(" poistettu solmu (" + s.getRuutu().getX() + "," + s.getRuutu().getY() + ")");
                 listalla[ny][nx] = false;
             }
             fLimit = fMin;
-            System.out.println("fLimin = fMin");
+            //System.out.println("fLimin = fMin");
         }
         if (loydetty) {
             //System.out.println("käsiteltiin yhteensä " + laskuri + " solmua");
