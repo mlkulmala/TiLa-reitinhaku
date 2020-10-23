@@ -13,6 +13,7 @@ Dijkstran algoritmi hyödyntää minimikekoa ja tallentaa kekoon solmuja, joilla
 koordinaatein ilmaistuna) ja etäisyys, jonka mukaan solmut järjestetään pienimmästä suurimpaan. Kun keosta otetaan 
 solmu, käydään läpi kaikki sen naapurisolmut, ja tarkastetaan, voidaanko etäisyyttä parantaa niiden avulla. Jos 
 voidaan, lisätään uusi solmu uudella etäisyydellä kekoon.
+
 A* on Dijkstran paranneltu versio, jossa käytetään apuna heuristiikkaa. Alkupisteen ja solmun välisen etäisyyden 
 sijaan käytetään heuristista funktiota, jossa kuljettuun etäisyyteen lisätään päätepisteen ja solmun välinen euklidinen 
 etäisyys, joka voidaan laskea koordinaattipisteiden avulla Pythagoraan lausetta käyttäen. A* algoritmissa solmut 
@@ -56,8 +57,8 @@ Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein: Int
 
 A* Search Algorithm. URL: https://www.geeksforgeeks.org/a-search-algorithm/
 
-Wikipedia. *A* Search Algorithm.* URL: https://en.wikipedia.org/wiki/A*_search_algorithm
+Wikipedia. A* Search Algorithm. URL: https://en.wikipedia.org/wiki/A*_search_algorithm
 
-Wikipedia. *Fringe Search.* 05/2020. URL: https://en.wikipedia.org/wiki/Fringe_search
+Wikipedia. Fringe Search. URL: https://en.wikipedia.org/wiki/Fringe_search
 
 Y. Björnsson, M. Enzenberger, R.C. Holte and J. Schaeffer: Finge Search: Beating A* at Pathfinding on Game Maps. URL: https://webdocs.cs.ualberta.ca/~holte/Publications/fringe.pdf
