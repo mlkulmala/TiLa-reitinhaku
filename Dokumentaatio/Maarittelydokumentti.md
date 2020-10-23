@@ -40,9 +40,6 @@ Tietorakenteista käytetään listaa (ArrayList), minimikekoa (PriorityQueue) ja
 | Fringe Search   |       |  |
 
 
-Fringe Searchin pitäisi ilmeisesti olla nopeampi kuin A*:n, mutta en saanut Fringe Searchia toimimaan tehokkaasti.
-Algoritmi löytää reitin, mutta toivottoman hitaasti.
-
 
 ## Muuta
 
