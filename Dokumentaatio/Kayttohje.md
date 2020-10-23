@@ -1,10 +1,14 @@
 # Käyttöohje
 
+
+## Reitinhaun käyttö
+
 Ohjelma avautuu graafiseen käyttöliittymään, jossa on kartta. Lyhimmän reitin hakua voi kokeilla
 joko klikkaamalla alku- ja päätepisteen kartalta tai syöttämällä niiden koordinaatit 
-tekstikenttiin. Koordinaatit annetaan kokonaislukuina. Haluttu hakualgoritmi (Dijkstra, A* tai xxxxx) 
+tekstikenttiin. Koordinaatit annetaan kokonaislukuina. Haluttu hakualgoritmi (Dijkstra, A* tai Fringe Search)
 valitaan nappia painamalla, ja haku käynnistyy Hae-nappia painamalla. Algoritmin löytämä lyhin reitti 
-piirtyy kartalle punaisena.
+piirtyy kartalle punaisena. Karttaan värittyvät myös kaikki ne ruudut, joissa algoritmi käy reitinhaun aikana.
+Reitinhakuun kulunut aika tulee näkyviin algoritmin valintanappien alle.
 
 <img src="https://raw.githubusercontent.com/mlkulmala/TiLa-reitinhaku/master/Dokumentaatio/kuvat/aloitusnakyma.png" width="600">
 
