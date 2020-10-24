@@ -1,4 +1,4 @@
-## Aineopintojen harjoitustyö:
+### Aineopintojen harjoitustyö:
 # Tietorakenteet ja algoritmit, syksy 2020
 
 Tämä on harjoitustyö, joka on tehty Helsingin yliopiston kurssille Aineopintojen harjoitustyö: tietorakenteet ja algoritmit.
