@@ -35,8 +35,8 @@ Tietorakenteista käytetään listaa (ArrayList), minimikekoa (PriorityQueue) ja
 
 | Algoritmi | Aikavaativuus | Tilavaativuus |
 | :--------:|:-------------:|:-------------:|
-| Dijkstra  | O(|E|+|V|log|V|) | O(|V|)   |
-| A*        | O(|E|)     | O(|V|) |
+| Dijkstra  | O((E)+(V)log(V)) | O(V|)   |
+| A*        | O(E)     | O(V) |
 | Fringe Search   |       |  |
 
 
