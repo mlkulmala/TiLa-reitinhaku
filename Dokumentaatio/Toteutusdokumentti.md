@@ -44,6 +44,25 @@ joka ei Tietorakenteet ja algoritmit -luentomonisteen mukaan ole juuri missään
 nykyaikaisten tietokoneiden tavasta tallentaa tietoa. Fringe Searchin toteuttamista olisi voinut yrittää jollain muulla 
 tietorakenteella, mutta kaikki aikani kului yrityksiin koodata toimiva algoritmi pseudokoodin mukaan.
 
+### Tietorakenteet
+
+#### MinimiKeko
+
+MimimiKeko on rakenteeltaan binäärikeko, jossa pienimmän alkion haku vie aikaa O(1) (pelkkä haku ei ole käytössä koodissa). 
+Alkion lisääminen tai poistaminen vie aikaa O(log n), koska lisäyksen tai poiston jälkeen pitää varmistaa kekoehdon 
+voimassaolo ja siirtää mahdollisesti alkioita alimmalta tasolta juureen. Tasoja on yhteensä log(n).
+
+#### Lista
+
+Luokka lista on toteutettu taulukkolistana. Käytetyimmät toiminnot, kuten alkion lisääminen ja indeksistä hakeminen vievät 
+aikaa vain O(1). Metodi `kaannaJarjestys` vaatii aikaa O(n), mutta se tehdään vain kerran kunkin reitinhaun yhteydessä.
+
+#### Linkitetty lista
+
+Linkitetty lista muodostuu solmuista, joista on viittaus edelliseen ja seuraavaan solmuun. Listan keskellä olevan solmun 
+poistaminen on saatu tehokkaaksi käyttämällä aputaulukkoa, jossa on kunkin solmun viittauksen edeltäjään ja seuraajaan, 
+joten kaikki käytetyt toiminnot toimivat ajassa O(1).
+
 
 ## Työn mahdolliset puutteet
 
