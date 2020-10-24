@@ -49,12 +49,12 @@ Tietorakenteista käytetään listaa (ArrayList), minimikekoa (PriorityQueue) ja
 
 ## Käytetyt lähteet
 
-[https://en.wikipedia.org/wiki/A*_search_algorithm]
+https://en.wikipedia.org/wiki/A*_search_algorithm
 
-[https://en.wikipedia.org/wiki/Fringe_search]
+https://en.wikipedia.org/wiki/Fringe_search
 
 Y. Björnsson, M. Enzenberger, R.C. Holte and J. Schaeffer: Fringe Search: Beating A* at Pathfinding on Game Maps. 
-[https://webdocs.cs.ualberta.ca/~holte/Publications/fringe.pdf]
+https://webdocs.cs.ualberta.ca/~holte/Publications/fringe.pdf
 
 Antti Laaksonen: Tietorakenteet ja algoritmit, luentomoniste, 22.8.2019.
 
