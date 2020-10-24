@@ -20,9 +20,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import tiralabra.reitinhaku.algoritmit.DijkstraAStar;
-import tiralabra.reitinhaku.algoritmit.FringeListoina;
 import tiralabra.reitinhaku.algoritmit.FringeSearch;
-import tiralabra.reitinhaku.algoritmit.FringeTaulukkona;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 
 import tiralabra.reitinhaku.verkko.Kartta;
@@ -40,7 +38,7 @@ public class UI extends Application {
     private int leveys, korkeus, aX, bX, aY, bY;
     private Label virheilmoitus, testitulos; 
     Lista<Integer> koordinaatit;
-    private boolean lahtoValittu;
+    private boolean lahtoValittu, maaliValittu;
     private GridPane grid;
     private Canvas canvas;
     private GraphicsContext piirtoalusta;
@@ -246,20 +244,17 @@ public class UI extends Application {
             } else {
                 long alku = System.nanoTime();
                 if (rbDijkstra.isSelected()) {
-                    DijkstraAStar da = new DijkstraAStar(kartta);
+                    DijkstraAStar da = new DijkstraAStar(kartta, this);
                     da.alustaHaku();
-                    da.haeReitti(koordinaatit, 1, piirtoalusta);
+                    da.haeReitti(koordinaatit, 1);
                 } else if (rbAStar.isSelected()) {
-                    DijkstraAStar da = new DijkstraAStar(kartta);
+                    DijkstraAStar da = new DijkstraAStar(kartta, this);
                     da.alustaHaku();
-                    da.haeReitti(koordinaatit, 2, piirtoalusta);
+                    da.haeReitti(koordinaatit, 2);
                 } else {
-//                    FringeSearch fringe = new FringeSearch(kartta);
-//                    fringe.alustaHaku();
-//                    fringe.haeReitti(koordinaatit, piirtoalusta);   
-                    FringeTaulukkona fringe = new FringeTaulukkona(kartta); 
+                    FringeSearch fringe = new FringeSearch(kartta, this);
                     fringe.alustaHaku();
-                    fringe.haeReitti(koordinaatit, piirtoalusta);
+                    fringe.haeReitti(koordinaatit);   
                 }
                 long loppu = System.nanoTime();
                 double kesto = 1.0 * (loppu - alku) / 1000000;
@@ -267,7 +262,7 @@ public class UI extends Application {
                 if (kartta.haeLyhinReitti().onTyhja()) {
                     virheilmoitus.setText("Valitsemiesi pisteiden välillä ei ole reittiä.");
                 } else {
-                    piirraReitti(kartta.haeLyhinReitti(), piirtoalusta);
+                    piirraReitti(kartta.haeLyhinReitti());
                 }
             }
         });
@@ -309,9 +304,8 @@ public class UI extends Application {
      * kesto.
      */
     public void lisaaTestitulokset() {
-        Label testitulos = new Label("");
+        testitulos = new Label("");
         grid.add(testitulos, 2, 3);
-        
     }
     
     /**
@@ -319,10 +313,17 @@ public class UI extends Application {
      * @param reitti 
      * @param alusta 
      */
-    public void piirraReitti(Lista<Ruutu> reitti, GraphicsContext alusta) {
+    public void piirraReitti(Lista<Ruutu> reitti) {
         for (int i = 0; i < reitti.koko(); i++) {
-            alusta.setFill(Color.RED);
-            alusta.fillOval(reitti.hae(i).getX() - 2, reitti.hae(i).getY() - 2, 4, 4);
+            piirtoalusta.setFill(Color.RED);
+            piirtoalusta.fillOval(reitti.hae(i).getX() - 2, reitti.hae(i).getY() - 2, 4, 4);
+        }
+    }
+    
+    public void varitaKaydytRuudut(Lista<Ruutu> kaydyt) {
+        for (int i = 0; i < kaydyt.koko(); i++) {
+            piirtoalusta.setFill(Color.CYAN); 
+            piirtoalusta.fillRect(kaydyt.hae(i).getX(), kaydyt.hae(i).getY(), 1, 1);
         }
     }
     

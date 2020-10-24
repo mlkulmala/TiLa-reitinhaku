@@ -1,21 +1,21 @@
 
 package tiralabra.reitinhaku.algoritmit;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import tiralabra.reitinhaku.tietorakenteet.LinkitettyLista;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
+import tiralabra.reitinhaku.ui.UI;
 import tiralabra.reitinhaku.verkko.Kartta;
 import tiralabra.reitinhaku.verkko.Ruutu;
 import tiralabra.reitinhaku.verkko.Solmu;
 
 /**
- *
+ * Fringe Search -reitinhakualgoritmin toteutus. 
  * @author mlkul
  */
 public class FringeSearch {
     
     Kartta kartta;
+    UI ui;
     int inf;
     boolean[][] listalla;
     int[][] suunnat;
@@ -24,12 +24,16 @@ public class FringeSearch {
     double fLimit, fMin;
     LinkitettyLista lista;
     Solmu[][] solmut;
+    Lista<Ruutu> kaydyt;
 
-    public FringeSearch(Kartta kartta) {
+    public FringeSearch(Kartta kartta, UI ui) {
         this.kartta = kartta;
+        this.ui = ui;
     }
 
-    //alustetaan tietorakenteet
+    /**
+     * Alustaa hakualgoritmin käyttämät tietorakenteet.
+     */
     public void alustaHaku() {
         int korkeus = kartta.getKorkeus();
         int leveys = kartta.getLeveys();
@@ -45,10 +49,14 @@ public class FringeSearch {
         suunnat = new int[][]{{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
         lista = new LinkitettyLista();
         solmut = new Solmu[korkeus + 1][leveys + 1];
+        kaydyt = new Lista<>();
     }    
     
-    // Fringe Search
-    public void haeReitti(Lista<Integer> koordinaatit, GraphicsContext cg) {
+    /**
+     * Hakee lyhimmän reitin parametrina annettujen koordinaattien välillä.
+     * @param koordinaatit
+     */
+    public void haeReitti(Lista<Integer> koordinaatit) {
         int ax = koordinaatit.hae(0);
         int ay = koordinaatit.hae(1);
         int bx = koordinaatit.hae(2);
@@ -64,8 +72,7 @@ public class FringeSearch {
         while (!loydetty && !lista.onTyhja()) {  
             fMin = inf; 
             for (Solmu s = lista.getEnsimmainen(); s != null; s = s.getSeuraava()) {  
-                cg.setFill(Color.CYAN);  //kartta.varitaRuutu(x, y);
-                cg.fillRect(s.getRuutu().getX(), s.getRuutu().getY(), 1, 1);
+                kaydyt.lisaa(s.getRuutu());
                 int nx = s.getRuutu().getX();
                 int ny = s.getRuutu().getY();
                 double f = etaisyys[ny][nx] + kartta.euklidinenEtaisyys(nx, ny, bx, by);
@@ -106,82 +113,9 @@ public class FringeSearch {
         }
         if (loydetty) {
             kartta.muodostaReitti(ax, ay, bx, by, mista);
+            ui.varitaKaydytRuudut(kaydyt);
         }
     }
     
-    
-    
-    
-    
-    
-    // Fringe Search tulostuksineen
-    public void haeReitti2(Lista<Integer> koordinaatit, GraphicsContext cg) {
-        int ax = koordinaatit.hae(0);
-        int ay = koordinaatit.hae(1);
-        int bx = koordinaatit.hae(2);
-        int by = koordinaatit.hae(3);
-        solmut[ay][ax] = (new Solmu(new Ruutu(ax, ay, 0))); 
-        lista.lisaaLoppuun(solmut[ay][ax]); 
-        etaisyys[ay][ax] = 0; 
-        mista[ay][ax] = null;
-        fLimit = kartta.euklidinenEtaisyys(ax, ay, bx, by); 
-        boolean loydetty = false; 
-        //int laskuri = 0;
-        
-        while (!loydetty && !lista.onTyhja()) {  
-            fMin = inf; 
-            for (Solmu s = lista.getEnsimmainen(); s != null; s = s.getSeuraava()) {  
-                //laskuri++;
-                //System.out.println("käsittelyssä solmu " + s.getRuutu().toString());
-                cg.setFill(Color.CYAN);
-                cg.fillRect(s.getRuutu().getX(), s.getRuutu().getY(), 1, 1);
-                int nx = s.getRuutu().getX();
-                int ny = s.getRuutu().getY();
-                System.out.println("Käsittelyssä solmu (" + nx + "," + ny + ")");
-                double f = etaisyys[ny][nx] + kartta.euklidinenEtaisyys(nx, ny, bx, by);
-                if (f > fLimit) {
-                    fMin = f < fMin ? f : fMin;
-                    continue;
-                }
-                if (nx == bx && ny == by) {
-                    loydetty = true; 
-                    break;
-                }
-                for (int i = 0; i < 8; i++) { 
-                    int uy = ny + suunnat[i][0];
-                    int ux = nx + suunnat[i][1];
-                    if (kartta.ruutuOnKuljettavissa(ux, uy)) {
-                        double uusiAskel = kartta.ruutujenValinenEtaisyys(i);           
-                        double uusiEtaisyys = etaisyys[ny][nx] + uusiAskel; 
-                        double nykyinenEtaisyys = etaisyys[uy][ux]; 
-                        if (mista[uy][ux] != null) {
-                            if (uusiEtaisyys > nykyinenEtaisyys) {
-                                continue;
-                            }
-                        }
-                        etaisyys[uy][ux] = uusiEtaisyys;
-                        mista[uy][ux] = s.getRuutu();
-                        if (listalla[uy][ux]) {
-                            System.out.println(" löytyi sama listalta, poistetaan");
-                            //lista.poistaSolmuJosOnListalla(ux, uy);
-                            lista.poistaSolmu(solmut[uy][ux]);
-                        }
-                        solmut[uy][ux] = new Solmu(new Ruutu(ux, uy, uusiEtaisyys));
-                        lista.lisaaLoppuun(solmut[uy][ux]);
-                        listalla[uy][ux] = true;
-                    } 
-                }
-                lista.poistaSolmu(s);
-                //System.out.println(" poistettu solmu (" + s.getRuutu().getX() + "," + s.getRuutu().getY() + ")");
-                listalla[ny][nx] = false;
-            }
-            fLimit = fMin;
-            //System.out.println("fLimin = fMin");
-        }
-        if (loydetty) {
-            //System.out.println("käsiteltiin yhteensä " + laskuri + " solmua");
-            kartta.muodostaReitti(ax, ay, bx, by, mista);
-        }
-    }
    
 }

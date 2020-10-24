@@ -95,14 +95,6 @@ public class KarttaTest {
         assertEquals(Math.sqrt(2), kartta.ruutujenValinenEtaisyys(7), 0.0f);
     }
     
-//    @Test
-//    public void tyhjennaReittiLuoTyhjanListan() {
-//        lyhinReitti = new Lista<>();
-//        lyhinReitti.lisaa(new Ruutu(0, 0, 0));
-//        lyhinReitti.lisaa(new Ruutu(1, 1, 1));
-//        kartta.tyhjennaReitti();
-//        assertEquals(null, lyhinReitti.hae(0));
-//    }
-    
+
 
 }

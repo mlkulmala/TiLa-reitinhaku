@@ -56,9 +56,14 @@ public class MinimiKeko {
         keko = kopio;    
     }
     
+    /**
+     * Poimii keon juuresta ruudun, jonka arvo on pienin. Vertailtava arvo on
+     * ruudun etäisyys tai etäisyysarvio algoritmista riippuen.
+     * @return 
+     */
     public Ruutu poistaPienin() {
-        Ruutu r = keko[1];              //poimitaan pienin keon juuresta
-        keko[1] = keko[viimeinen];      //siirretään keon viimeinen juureen
+        Ruutu r = keko[1];             
+        keko[1] = keko[viimeinen];      
         keko[viimeinen] = null;
         viimeinen--;
         varmistaKekoehto(1);

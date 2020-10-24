@@ -1,32 +1,36 @@
 
 package tiralabra.reitinhaku.algoritmit;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import tiralabra.reitinhaku.tietorakenteet.Lista;
 import tiralabra.reitinhaku.tietorakenteet.MinimiKeko;
+import tiralabra.reitinhaku.ui.UI;
 import tiralabra.reitinhaku.verkko.Kartta;
 import tiralabra.reitinhaku.verkko.Ruutu;
 
 /**
- *
+ * Dijkstran ja AStar -algoritmien toteutus.
  * @author mlkul
  */
 public class DijkstraAStar {
     
     Kartta kartta;
+    UI ui;
     int inf;
     double[][] etaisyys;
     boolean[][] kasitelty;
     MinimiKeko keko;
     Ruutu[][] mista;
     int[][] suunnat;
+    Lista<Ruutu> kaydyt;
     
-    public DijkstraAStar(Kartta kartta) {
+    public DijkstraAStar(Kartta kartta, UI ui) {
         this.kartta = kartta;
+        this.ui = ui;
     }
     
-    //alustetaan tietorakenteet
+    /**
+     * Alustaa hakualgoritmin käyttämät tietorakenteet.
+     */
     public void alustaHaku() {
         int korkeus = kartta.getKorkeus();
         int leveys = kartta.getLeveys();
@@ -41,9 +45,15 @@ public class DijkstraAStar {
         keko = new MinimiKeko();
         mista = new Ruutu[korkeus + 1][leveys + 1];
         suunnat = new int[][]{{-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}};
+        kaydyt = new Lista<>();
     } 
     
-    public void haeReitti(Lista<Integer> koordinaatit, int hakutapa, GraphicsContext cg) {
+    /**
+     * Hakee lyhimmän reitin parametrina annettujen koordinaattien välillä.
+     * @param koordinaatit
+     * @param hakutapa 
+     */
+    public void haeReitti(Lista<Integer> koordinaatit, int hakutapa) {
         int ax = koordinaatit.hae(0);
         int ay = koordinaatit.hae(1);
         int bx = koordinaatit.hae(2);
@@ -53,8 +63,7 @@ public class DijkstraAStar {
         
         while (!keko.onTyhja()) {
             Ruutu nykyinen = keko.poistaPienin();
-            cg.setFill(Color.CYAN);
-            cg.fillRect(nykyinen.getX(), nykyinen.getY(), 1, 1);
+            kaydyt.lisaa(nykyinen);
             int nx = nykyinen.getX();
             int ny = nykyinen.getY();
             if (kasitelty[ny][nx]) {
@@ -86,6 +95,7 @@ public class DijkstraAStar {
             }
         }
         kartta.muodostaReitti(ax, ay, bx, by, mista);
+        ui.varitaKaydytRuudut(kaydyt);
     }
     
   
