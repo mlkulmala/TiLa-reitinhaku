@@ -35,8 +35,8 @@ Tietorakenteista käytetään listaa (ArrayList), minimikekoa (PriorityQueue) ja
 
 | Algoritmi | Aikavaativuus | Tilavaativuus |
 | :--------:|:-------------:|:-------------:|
-| Dijkstra  | O((E+V)log(V)) | O(V)   |
-| A*        | O(E)     | O(V) |
+| Dijkstra  | O(|E|+|V|log|V|) | O(|V|)   |
+| A*        | O(|E|)     | O(|V|) |
 | Fringe Search   |       |  |
 
 
@@ -48,14 +48,14 @@ Tietorakenteista käytetään listaa (ArrayList), minimikekoa (PriorityQueue) ja
 - koulutusohjelma: tietojenkäsittelytieteen kandiohjelma
 
 ## Käytetyt lähteet
-Antti Laaksonen: Tietorakenteet ja algoritmit, luentomoniste, 22.8.2019. 
+
+[https://en.wikipedia.org/wiki/A*_search_algorithm]
+
+[https://en.wikipedia.org/wiki/Fringe_search]
+
+Y. Björnsson, M. Enzenberger, R.C. Holte and J. Schaeffer: Fringe Search: Beating A* at Pathfinding on Game Maps. 
+[https://webdocs.cs.ualberta.ca/~holte/Publications/fringe.pdf]
+
+Antti Laaksonen: Tietorakenteet ja algoritmit, luentomoniste, 22.8.2019.
 
 Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein: Introduction to Algorithms, Third Edition.
-
-A* Search Algorithm. URL: https://www.geeksforgeeks.org/a-search-algorithm/
-
-Wikipedia. A* Search Algorithm. URL: https://en.wikipedia.org/wiki/A*_search_algorithm
-
-Wikipedia. Fringe Search. URL: https://en.wikipedia.org/wiki/Fringe_search
-
-Y. Björnsson, M. Enzenberger, R.C. Holte and J. Schaeffer: Finge Search: Beating A* at Pathfinding on Game Maps. URL: https://webdocs.cs.ualberta.ca/~holte/Publications/fringe.pdf
