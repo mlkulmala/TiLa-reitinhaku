@@ -67,10 +67,15 @@ joten kaikki käytetyt toiminnot toimivat ajassa O(1).
 ## Työn mahdolliset puutteet
 
 Suurin puute lienee Fringe Searchin hitaus. Koska kaikki aika meni Fringe Searchin parissa, jäi muu koodi vähemmälle huomiolle.
-Koodi olisi varmasti kannattanut jakaa useampiin luokkiin. Ohjelmaan jäi myös muutamia bugeja, kuten alku- ja päätepisteen
-valinnassa kartalta pisteitä piirtyy useampia.
-En myöskään onnistunut generoimaan jar-pakettia enkä selvittämään, mistä tämä johtuu.
+Koodi olisi varmasti kannattanut jakaa useampiin luokkiin, mutta aika loppui lopussa kesken. Kartan käsittely olisi kannattanut
+sijoittaa omaan luokkaansa. Myös jokin Math-luokan metodi jäi toteuttamatta omana versiona. 
 
+Ohjelmaan jäi myös muutamia bugeja. Esimerkiksi valittaessa alku- ja päätepisteen kartalta pisteitä piirtyy useampia, vaikka 
+tekstikenttien koordinaatit vaihtuvat oikein.
+
+Algoritmeilta puuttuu yksikkötestit.
+
+En myöskään onnistunut generoimaan jar-pakettia enkä selvittämään, mistä tämä johtuu.
 
 ## Lähteet
 Kartta [Moving AI Lab](https://www.movingai.com/benchmarks/street/index.html)
