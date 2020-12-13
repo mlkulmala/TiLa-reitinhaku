@@ -320,6 +320,10 @@ public class UI extends Application {
         }
     }
     
+    /**
+     * Varittaa karttaan hakualgoritmin käsittelemät ruudut.
+     * @param kaydyt 
+     */
     public void varitaKaydytRuudut(Lista<Ruutu> kaydyt) {
         for (int i = 0; i < kaydyt.koko(); i++) {
             piirtoalusta.setFill(Color.CYAN); 
